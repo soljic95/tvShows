@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ShowsMarkoSoljic</string>
+    <string name="login_activity_username">Username</string>
+    <string name="login_activity_password">Password</string>
+    <string name="login_activity_log_in">Log in</string>
+    <string name="main_activity_you_re_in">You’re in!</string>
+    <string name="main_activity_welcome_d">Welcome %s</string>
 </resources>

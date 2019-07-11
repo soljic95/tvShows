@@ -39,7 +39,7 @@ class LoginPresenter : LoginContract.Presenter {
 
     override fun subscribeToPasswordObservable(observable: InitialValueObservable<CharSequence>) {
         observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())//ovo bi trebala biti cista kotlin klasa? Nista android specific? Jel smije tu onda rx ici?
             .subscribe {
                 checkPassword(it.toString());
                 Log.d("marko", it.toString())
@@ -63,9 +63,8 @@ class LoginPresenter : LoginContract.Presenter {
 
     }
 
-    override fun login(username: String) {
-        val intent = Intent(view as Activity, MainActivity::class.java)
-        intent.putExtra(INTENT_KEY, username)
+    override fun login(intent: Intent) {
+
         router.showMainScreen(intent)
 
     }

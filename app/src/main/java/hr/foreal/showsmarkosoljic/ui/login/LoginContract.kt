@@ -1,5 +1,6 @@
 package hr.foreal.showsmarkosoljic.ui.login
 
+import android.content.Intent
 import com.jakewharton.rxbinding2.InitialValueObservable
 
 class LoginContract {
@@ -23,7 +24,7 @@ class LoginContract {
 
         fun subscribeToPasswordObservable(observable: InitialValueObservable<CharSequence>)
 
-        fun login(username: String)
+        fun login(intent: Intent)
 
     }
 }

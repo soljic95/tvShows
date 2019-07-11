@@ -8,6 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyCustomAppTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/buttonDisabledPink</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/buttonEnabledPink</item>
+    </style>
+
+
+
+
     <style name="LoginActivityButtonDisabled" parent="Theme.MaterialComponents">
         <item name="android:colorButtonNormal">@color/buttonDisabledPink</item>
         <item name="android:backgroundTint">@color/buttonDisabledPink</item>

@@ -1,43 +1,42 @@
 package hr.foreal.showsmarkosoljic.ui.login
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.OnTextChanged
-import com.google.android.material.textfield.TextInputEditText
+import androidx.core.widget.doAfterTextChanged
 import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
+import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
-class Login : AppCompatActivity(), LoginContract.View {
+class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     private val presenter: LoginContract.Presenter = LoginPresenter()
     private var usernameValid = false
     private var passwordValid = false
 
-    @BindView(R.id.etUsername)
-    lateinit var etUsername: TextInputEditText
-
-    @BindView(R.id.etPassword)
-    lateinit var etPassword: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ButterKnife.bind(this)
         presenter.setView(this)
+
+        btnLogin.setOnClickListener { onBtnLoginClicked() }
+
+        etUsername.doAfterTextChanged { userNameTextChanged() }
+        etPassword.doAfterTextChanged { passwordTextChanged() }
 
     }
 
-    @OnClick(R.id.btnLogin)
-    fun onBtnLoginClicked() {
+    private fun onBtnLoginClicked() {
 
         if (usernameValid && passwordValid) {
             passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
-            presenter.login(etUsername.text.toString())
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(LoginPresenter.INTENT_KEY, etUsername.text.toString())
+            presenter.login(intent)
         } else {
             if (!usernameValid) {
                 etUsername.error = "Username cant be empty"
@@ -52,14 +51,12 @@ class Login : AppCompatActivity(), LoginContract.View {
 
     }
 
-    @OnTextChanged(R.id.etUsername)
-    fun userNameTextChanged() {
+    private fun userNameTextChanged() {
         presenter.subscribeToUserNameObservable(etUsername.textChanges())
 
     }
 
-    @OnTextChanged(R.id.etPassword)
-    fun passwordTextChanged() {
+    private fun passwordTextChanged() {
         passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
         presenter.subscribeToPasswordObservable(etPassword.textChanges())
 

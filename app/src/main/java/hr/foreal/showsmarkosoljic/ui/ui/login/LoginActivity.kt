@@ -1,6 +1,5 @@
-package hr.foreal.showsmarkosoljic.ui.login
+package hr.foreal.showsmarkosoljic.ui.ui.login
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle

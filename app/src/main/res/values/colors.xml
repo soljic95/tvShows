@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="buttonDisabledPink">#ffccd5</color>
     <color name="buttonEnabledPink">#ff758c</color>
+    <color name="black">#DD141313</color>
 </resources>

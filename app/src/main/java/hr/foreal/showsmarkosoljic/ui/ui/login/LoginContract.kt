@@ -1,4 +1,4 @@
-package hr.foreal.showsmarkosoljic.ui.login
+package hr.foreal.showsmarkosoljic.ui.ui.login
 
 import android.content.Intent
 import com.jakewharton.rxbinding2.InitialValueObservable

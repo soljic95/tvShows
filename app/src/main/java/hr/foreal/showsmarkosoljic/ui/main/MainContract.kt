@@ -7,6 +7,8 @@ class MainContract {
     }
 
     interface Presenter {
+        fun showWelcomeFragment(userName: String)
 
+        fun setView(view: View)
     }
 }

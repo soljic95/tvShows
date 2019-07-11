@@ -1,11 +1,10 @@
-package hr.foreal.showsmarkosoljic.ui.login
+package hr.foreal.showsmarkosoljic.ui.ui.login
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.jakewharton.rxbinding2.InitialValueObservable
-import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import hr.foreal.showsmarkosoljic.ui.router.Router
 import hr.foreal.showsmarkosoljic.ui.router.RouterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +22,7 @@ class LoginPresenter : LoginContract.Presenter {
 
     override fun setView(view: LoginContract.View) {
         this.view = view
-        this.router = RouterImpl(view as Context)
+        this.router = RouterImpl(view as Activity)
 
     }
 

@@ -2,15 +2,14 @@ package hr.foreal.showsmarkosoljic.ui.ui.tvShowDetails
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
-
+import androidx.fragment.app.Fragment
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import hr.foreal.showsmarkosoljic.ui.adapter.TvShowsRecyclerAdapter
+import hr.foreal.showsmarkosoljic.ui.model.TvShow
+import kotlinx.android.synthetic.main.fragment_tv_show_details.*
 
 
 class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
@@ -23,8 +22,8 @@ class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
         }
     }
 
+    private lateinit var tvShow: TvShow
     private var presenter: TvShowDetailsContract.Presenter = TvShowDetailsPresenter()
-    private var actionBar: ActionBar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +36,23 @@ class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
         super.onViewCreated(view, savedInstanceState)
         presenter.setView(this)
         setHasOptionsMenu(true)
-        actionBar = (activity as MainActivity).supportActionBar
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title = "Office"
+        tvShow = arguments!!.getParcelable(TvShowsRecyclerAdapter.TV_SHOW_BUNDLE_KEY)
+        setToolbar()
+        init()
+
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> presenter.onUpButtonClicked()
-        }
-        return true
+
+    private fun setToolbar() {
+        tvShowDetailToolbar.setNavigationOnClickListener { presenter.onUpButtonClicked() }
+        toolbar_image.setBackgroundResource(tvShow.showDetailsImageId)
+
+    }
+
+    private fun init() {
+        tvShowDescription.text = tvShow.showDescription
+        tvShowName.text = tvShow.name
 
     }
 

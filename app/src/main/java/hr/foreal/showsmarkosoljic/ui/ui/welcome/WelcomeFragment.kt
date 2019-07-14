@@ -10,6 +10,7 @@ import android.view.ViewGroup
 
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
 
 class WelcomeFragment : Fragment(), WelcomeContract.View {

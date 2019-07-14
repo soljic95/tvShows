@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -67,39 +66,50 @@ class TvShowsListFragment : Fragment(), TvShowsContract.View, TvShowsRecyclerAda
         showList = arrayListOf()
         val theOffice = TvShow(
             1,
-            1,
-            "Office",
+            R.drawable.office_list_poster,
+            R.drawable.the_affair_poster,
+            "The Office",
             2005,
             arrayListOf(),
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus id ante at rutrum. Fusce sodales quam dui, in pellentesque ligula accumsan et. Pellentesque lobortis ultrices magna, at dignissim enim cursus a. Morbi eget nunc rhoncus, interdum mauris ornare, pretium turpis. Nunc at nulla ipsum."
+            "A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium."
         )
         val bigBang = TvShow(
             2,
-            1,
-            "bigBang",
+            R.drawable.bang_list_poster, R.drawable.bang_details_poster,
+            "The Big Bang Theory",
             2007,
             arrayListOf(),
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus id ante at rutrum. Fusce sodales quam dui, in pellentesque ligula accumsan et."
+            "A woman who moves into an apartment across the hall from two brilliant but socially awkward physicists shows them how little they know about life outside of the laboratory."
         )
         val janeTheVirgin = TvShow(
             3,
-            1,
-            "janeTheVirgin",
+            R.drawable.jane_list_poster, R.drawable.jane_details_poster,
+            "Jane the Virgin",
             2019,
             arrayListOf(),
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus id ante at rutrum. Fusce sodales quam dui, in pellentesque ligula accumsan et."
+            "A young, devout Catholic woman discovers that she was accidentally artificially inseminated."
+        )
+
+        val house = TvShow(
+            3,
+            R.drawable.house_list_poster, R.drawable.house_details_poster,
+            "House M.D.",
+            2019,
+            arrayListOf(),
+            "An antisocial maverick doctor who specializes in diagnostic medicine does whatever it takes to solve puzzling cases that come his way using his crack team of doctors and his wits."
         )
         val sherlock = TvShow(
             4,
-            1,
-            "sherlock",
+            R.drawable.sherlock_list_poster, R.drawable.sherlock_details_poster,
+            "Sherlock",
             2010,
             arrayListOf(),
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus id ante at rutrum. Fusce sodales quam dui, in pellentesque ligula accumsan et."
+            "A modern update finds the famous sleuth and his doctor partner solving crime in 21st century London."
         )
         with(showList) {
             add(theOffice)
             add(bigBang)
+            add(house)
             add(janeTheVirgin)
             add(sherlock)
         }

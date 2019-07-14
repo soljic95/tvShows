@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120px" height="120px" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 55.2 (78181) - https://sketchapp.com -->
+    <title>2B38293C-FD30-47BC-BC79-5F57EF517989</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <linearGradient x1="19.9078646%" y1="14.0446646%" x2="60.7964689%" y2="72.3587219%" id="linearGradient-1">
+            <stop stop-color="#FF758C" offset="0%"></stop>
+            <stop stop-color="#FF7EB3" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Image-/-img-placeholder-registration">
+            <g id="Group-4" transform="translate(13.000000, 8.000000)">
+                <polyline id="Stroke-16" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round" points="41.8261628 83.7209302 41.7488372 96.2639535 36.0465116 96.2639535"></polyline>
+                <path d="M73.255814,61.0465116 C73.255814,61.0465116 82.8238372,78.8215116 99.975,61.7744186" id="Stroke-10" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round"></path>
+                <g id="Group-3" transform="translate(5.813953, 0.000000)">
+                    <polyline id="Stroke-14" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round" points="52.3255814 70.9302326 66.85 92.4017442 74.3302326 87.3418605"></polyline>
+                    <path d="M77.8151744,33.9000581 C64.389593,23.3744767 40.3279651,7.69540698 25.0512209,1.78203488 C14.4791279,-2.30982558 4.21982558,2.79017442 2.67156977,14.020407 C0.224476744,31.7721512 -0.422616279,59.6715698 1.23901163,75.7738953 C2.40296512,87.0506395 12.3727326,92.9099419 23.0273837,89.0361047 C37.3994767,83.8111047 64.486686,69.3186628 77.223314,59.4000581 C86.1680814,52.4349419 86.736686,40.8942442 77.8151744,33.9000581" id="Fill-1" fill="url(#linearGradient-1)"></path>
+                </g>
+                <path d="M39.8474239,60.373124 C39.2747495,60.4841705 38.8712611,61.0254496 38.9677727,61.6004496 C38.9683541,61.603938 38.9689355,61.6080077 38.9700983,61.6109147 C39.6142844,65.4045194 43.2323076,67.9492868 47.0288192,67.2603333 C50.3735867,66.6527752 52.832889,63.5899845 52.7044006,60.1923101 C52.6892844,59.7864961 52.638703,59.3923101 52.5573076,59.0120775 C52.4323076,58.4248682 51.8596332,58.0457984 51.2706797,58.1597519 L39.8474239,60.373124 Z" id="Fill-4" fill="#2E2E2E"></path>
+                <path d="M50,49.3604651 C50,45.5395349 53.0976744,42.4418605 56.9186047,42.4418605 C60.7401163,42.4418605 63.8377907,45.5395349 63.8377907,49.3604651" id="Stroke-6" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round"></path>
+                <path d="M22.2121516,52.377829 C21.509826,48.6220151 23.984826,45.0074802 27.7412213,44.3051546 C31.4970353,43.602829 35.1109888,46.0784104 35.8138958,49.8342244" id="Stroke-8" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round"></path>
+                <path d="M17.0540698,70.3488372 C17.0540698,70.3488372 11.4337209,79.5273256 0,73.7133721" id="Stroke-12" stroke="#2E2E2E" stroke-width="6" stroke-linecap="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

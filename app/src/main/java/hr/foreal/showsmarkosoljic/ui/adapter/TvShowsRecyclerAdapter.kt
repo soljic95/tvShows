@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.ui.model.TvShow
 import kotlinx.android.synthetic.main.tv_show_list_item.view.*
@@ -37,7 +38,11 @@ class TvShowsRecyclerAdapter(private val inflater: LayoutInflater, private val l
             tvShowsName.text = showList[position].name
             tvShowsAirDate.text = showList[position].airDate.toString()
             tvShowsItemLayoutContainer.setOnClickListener { listener.openShowDetails(createBundle(showList[position])) }
+
         }
+        Glide.with(holder.itemView)
+            .load(showList[position].listItemImageId)
+            .into(holder.itemView.tvShowImage)
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

@@ -1,21 +1,23 @@
 package hr.foreal.showsmarkosoljic.ui.ui.welcome
 
 
-import android.opengl.Visibility
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import hr.foreal.showsmarkosoljic.R
+import hr.foreal.showsmarkosoljic.ui.base.BaseFragment
+import hr.foreal.showsmarkosoljic.ui.base.BasePresenter
+import hr.foreal.showsmarkosoljic.ui.dagger.component.FragmentComponent
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import javax.inject.Inject
 
-class WelcomeFragment : Fragment(), WelcomeContract.View {
+class WelcomeFragment : BaseFragment(), WelcomeContract.View {
 
-    private var presenter: WelcomeContract.Presenter = WelcomePresenter()
+    @Inject
+    lateinit var presenter: WelcomeContract.Presenter
 
     companion object {
         val BUNDLE_KEY = "BUNDLE_KEY"
@@ -42,6 +44,14 @@ class WelcomeFragment : Fragment(), WelcomeContract.View {
         setWelcomeText(arguments?.getString(BUNDLE_KEY))
         showTvShowsListScreen()
         (activity as MainActivity).getToolbar().visibility = View.GONE
+    }
+
+    override fun inject(fragmentComponent: FragmentComponent) {
+        fragmentComponent.inject(this)
+    }
+
+    override fun getPresenter(): BasePresenter {
+        return presenter as BasePresenter
     }
 
     private fun showTvShowsListScreen() {

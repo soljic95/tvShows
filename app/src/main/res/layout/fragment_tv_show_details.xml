@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tvShowsDetailLayout"
     android:layout_width="match_parent"
-    android:background="@android:color/white"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".ui.ui.tvShowDetails.TvShowDetailsFragment">
 
 
@@ -15,7 +15,10 @@
 
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -69,25 +72,30 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvShowDescription" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/episodesRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="16dp"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:src="@android:drawable/ic_input_add"
+                    android:src="@drawable/ic_add"
                     app:layout_constraintBottom_toBottomOf="@+id/textView3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/textView3" />
 
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
 
 
                 <ImageView
@@ -102,36 +110,38 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tvSomeoneIsSleeping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
-                    android:text="Someone has fallen asleep."
+                    android:text="@string/someone_has_fallen_asleep"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="@+id/ivSleepingPlaceHolder"
                     app:layout_constraintStart_toStartOf="@+id/ivSleepingPlaceHolder"
                     app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/tvDontWakeHimUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="44dp"
-                    android:text="Don’t wake him up "
+                    android:text="@string/don_t_wake_him_up"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="@+id/textView2"
-                    app:layout_constraintStart_toStartOf="@+id/textView2"
+                    app:layout_constraintEnd_toEndOf="@+id/tvSomeoneIsSleeping"
+                    app:layout_constraintStart_toStartOf="@+id/tvSomeoneIsSleeping"
                     app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder" />
 
                 <TextView
+                    android:id="@+id/tvAddSomeEpisodes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="68dp"
+                    android:background="?attr/selectableItemBackground"
                     android:text="Add some episodes "
                     android:textColor="@color/buttonEnabledPink"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="@+id/textView4"
-                    app:layout_constraintStart_toStartOf="@+id/textView4"
+                    app:layout_constraintEnd_toEndOf="@+id/tvDontWakeHimUp"
+                    app:layout_constraintStart_toStartOf="@+id/tvDontWakeHimUp"
                     app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder" />
 
 
@@ -141,12 +151,14 @@
         </androidx.core.widget.NestedScrollView>
 
 
+
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp"
-            android:theme="@style/MyCustomAppTheme">
+            android:theme="@style/MyCustomAppTheme"
+            app:elevation="0dp">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"

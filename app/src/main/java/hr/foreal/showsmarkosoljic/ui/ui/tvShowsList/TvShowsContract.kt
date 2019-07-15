@@ -13,6 +13,8 @@ class TvShowsContract {
 
         fun init()
 
-        fun onItemClicked(bundle: Bundle)
+        fun listItemClicked(bundle: Bundle)
+
+
     }
 }

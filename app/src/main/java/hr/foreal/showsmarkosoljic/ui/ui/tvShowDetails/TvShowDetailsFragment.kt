@@ -5,14 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
+import hr.foreal.showsmarkosoljic.ui.adapter.EpisodesRecyclerAdapter
 import hr.foreal.showsmarkosoljic.ui.adapter.TvShowsRecyclerAdapter
+import hr.foreal.showsmarkosoljic.ui.base.BaseFragment
+import hr.foreal.showsmarkosoljic.ui.base.BasePresenter
+import hr.foreal.showsmarkosoljic.ui.dagger.component.FragmentComponent
+import hr.foreal.showsmarkosoljic.ui.interfaces.EpisodeReciver
+import hr.foreal.showsmarkosoljic.ui.model.Episode
 import hr.foreal.showsmarkosoljic.ui.model.TvShow
 import kotlinx.android.synthetic.main.fragment_tv_show_details.*
+import javax.inject.Inject
 
 
-class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
+class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View, EpisodeReciver {
+
+
     companion object {
         @JvmStatic
         fun newInstance(bundle: Bundle): TvShowDetailsFragment {
@@ -22,8 +32,15 @@ class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
         }
     }
 
+    private var episodeList: ArrayList<Episode> = arrayListOf()
+
     private lateinit var tvShow: TvShow
-    private var presenter: TvShowDetailsContract.Presenter = TvShowDetailsPresenter()
+    private lateinit var adapter: EpisodesRecyclerAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var layoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var presenter: TvShowDetailsContract.Presenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,8 +56,24 @@ class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
         tvShow = arguments!!.getParcelable(TvShowsRecyclerAdapter.TV_SHOW_BUNDLE_KEY)
         setToolbar()
         init()
+        checkEpisodeList()
+        initRecyclerAdapter()
+
+        fab.setOnClickListener {
+            addEpisodes()
+        }
+
+        tvAddSomeEpisodes.setOnClickListener { addEpisodes() }
 
 
+    }
+
+    override fun inject(fragmentComponent: FragmentComponent) {
+        fragmentComponent.inject(this)
+    }
+
+    override fun getPresenter(): BasePresenter {
+        return presenter as BasePresenter
     }
 
 
@@ -54,6 +87,47 @@ class TvShowDetailsFragment : Fragment(), TvShowDetailsContract.View {
         tvShowDescription.text = tvShow.showDescription
         tvShowName.text = tvShow.name
 
+    }
+
+    private fun addEpisodes() {
+        presenter.fabClicked()
+    }
+
+
+    override fun reciveEpisode(episode: Episode) {
+        episodeList.add(episode)
+        adapter.addEpisode(episode)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun initRecyclerAdapter() {
+        adapter = EpisodesRecyclerAdapter(LayoutInflater.from(context))
+        recyclerView = view!!.findViewById(R.id.episodesRecyclerView)
+        layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
+        if (episodeList.isNotEmpty()) {
+            for (ep in episodeList) {
+                adapter.addEpisode(ep)
+            }
+        }
+    }
+
+    private fun checkEpisodeList() {
+        if (episodeList.isEmpty()) {
+            ivSleepingPlaceHolder.visibility = View.VISIBLE
+            tvDontWakeHimUp.visibility = View.VISIBLE
+            tvSomeoneIsSleeping.visibility = View.VISIBLE
+            tvAddSomeEpisodes.visibility = View.VISIBLE
+        } else {
+            ivSleepingPlaceHolder.visibility = View.GONE
+            tvDontWakeHimUp.visibility = View.GONE
+            tvSomeoneIsSleeping.visibility = View.GONE
+            tvAddSomeEpisodes.visibility = View.GONE
+
+        }
     }
 
 

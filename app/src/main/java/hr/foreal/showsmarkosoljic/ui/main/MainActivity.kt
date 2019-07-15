@@ -1,18 +1,24 @@
 package hr.foreal.showsmarkosoljic.ui.main
 
 import android.os.Bundle
-import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatActivity
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.ui.ui.login.LoginActivity
+import hr.foreal.showsmarkosoljic.ui.base.BaseActivity
+import hr.foreal.showsmarkosoljic.ui.base.BasePresenter
+import hr.foreal.showsmarkosoljic.ui.dagger.component.ActivityComponent
+import hr.foreal.showsmarkosoljic.ui.interfaces.EpisodeReciver
+import hr.foreal.showsmarkosoljic.ui.interfaces.EpisodeSender
+import hr.foreal.showsmarkosoljic.ui.model.Episode
 import hr.foreal.showsmarkosoljic.ui.ui.login.LoginPresenter
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_welcome.*
+import hr.foreal.showsmarkosoljic.ui.ui.tvShowDetails.TvShowDetailsFragment
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class MainActivity : BaseActivity(), MainContract.View, EpisodeSender {
+
 
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var presenter: MainContract.Presenter
+
+    @Inject
+    lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +34,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     private fun init() {
         this.toolbar = findViewById(R.id.toolbar)
-        presenter = MainPresenter()
     }
 
     fun getToolbar(): androidx.appcompat.widget.Toolbar {
         return this.toolbar
+    }
+
+    override fun inject(activityComponent: ActivityComponent) {
+        activityComponent.inject(this)
+    }
+
+    override fun getPresenter(): BasePresenter {
+        return presenter as BasePresenter
+    }
+
+    override fun sendEpisodeData(episode: Episode) { //ovako sam stavio jer sam radio na brzinu pa eto :( iduci korak je implementirati room i onda samo spremati i povlaciti kako iz koje epizode
+        (supportFragmentManager.findFragmentByTag("DETAIL_FRAGMENT") as EpisodeReciver).reciveEpisode(episode)
     }
 
 

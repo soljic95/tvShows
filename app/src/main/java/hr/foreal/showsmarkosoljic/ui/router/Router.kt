@@ -15,4 +15,6 @@ interface Router {
     fun showTvShowDetailsScreen(bundle: Bundle)
 
     fun goBack()
+
+    fun showAddEpisodeScreen()
 }

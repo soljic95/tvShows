@@ -10,10 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.ui.adapter.TvShowsRecyclerAdapter
+import hr.foreal.showsmarkosoljic.ui.base.BaseFragment
+import hr.foreal.showsmarkosoljic.ui.base.BasePresenter
+import hr.foreal.showsmarkosoljic.ui.dagger.component.FragmentComponent
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import hr.foreal.showsmarkosoljic.ui.model.TvShow
+import javax.inject.Inject
 
-class TvShowsListFragment : Fragment(), TvShowsContract.View, TvShowsRecyclerAdapter.OnContainerClicked {
+class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecyclerAdapter.OnContainerClicked {
+
+
     companion object {
         @JvmStatic
         fun newInstance(): TvShowsListFragment {
@@ -21,8 +27,9 @@ class TvShowsListFragment : Fragment(), TvShowsContract.View, TvShowsRecyclerAda
         }
     }
 
+    @Inject
+    lateinit var presenter: TvShowsContract.Presenter
 
-    private val presenter: TvShowsContract.Presenter = TvShowsPresenter()
     private lateinit var adapter: TvShowsRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
@@ -46,8 +53,16 @@ class TvShowsListFragment : Fragment(), TvShowsContract.View, TvShowsRecyclerAda
 
     }
 
+    override fun inject(fragmentComponent: FragmentComponent) {
+        fragmentComponent.inject(this)
+    }
+
+    override fun getPresenter(): BasePresenter {
+        return presenter as BasePresenter
+    }
+
     override fun openShowDetails(bundle: Bundle) {
-        presenter.onItemClicked(bundle)
+        presenter.listItemClicked(bundle)
     }
 
     private fun initRecyclerView() {
@@ -106,12 +121,22 @@ class TvShowsListFragment : Fragment(), TvShowsContract.View, TvShowsRecyclerAda
             arrayListOf(),
             "A modern update finds the famous sleuth and his doctor partner solving crime in 21st century London."
         )
+
+        val itsAllwaysSunny = TvShow(
+            5,
+            R.drawable.sunny_list_poster, R.drawable.sunny_details_poster,
+            "Its allways sunny in Philadelphia",
+            2005,
+            arrayListOf(),
+            "Five friends with big egos and slightly arrogant attitudes are the proprietors of an Irish pub in Philadelphia."
+        )
         with(showList) {
             add(theOffice)
             add(bigBang)
             add(house)
             add(janeTheVirgin)
             add(sherlock)
+            add(itsAllwaysSunny)
         }
     }
 

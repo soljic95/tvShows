@@ -35,8 +35,8 @@ class TvShowsRecyclerAdapter(private val inflater: LayoutInflater, private val l
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         with(holder.itemView) {
-            tvShowsName.text = showList[position].name
-            tvShowsAirDate.text = showList[position].airDate.toString()
+            tvEpisodeNumber.text = showList[position].name
+            tvEpisodeName.text = showList[position].airDate.toString()
             tvShowsItemLayoutContainer.setOnClickListener { listener.openShowDetails(createBundle(showList[position])) }
 
         }

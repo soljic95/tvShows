@@ -11,5 +11,7 @@ interface TvShowDetailsContract {
         fun setView(view: View)
 
         fun onUpButtonClicked()
+
+        fun fabClicked()
     }
 }

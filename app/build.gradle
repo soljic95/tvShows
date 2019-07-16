@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 
@@ -31,12 +30,23 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
+    def room_version = "2.1.0"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -51,4 +61,17 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     implementation "com.jakewharton.rxbinding2:rxbinding:2.0.0"
     implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.0.0"
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //dagger
+    implementation 'com.google.dagger:dagger:2.23.2'
+    kapt 'com.google.dagger:dagger-compiler:2.23.2'
+
+    //room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }

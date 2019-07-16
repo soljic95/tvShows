@@ -1,19 +1,24 @@
 package hr.foreal.showsmarkosoljic.ui.login
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
+import hr.foreal.showsmarkosoljic.base.BaseActivity
+import hr.foreal.showsmarkosoljic.base.BasePresenter
+import hr.foreal.showsmarkosoljic.dagger.component.ActivityComponent
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity(), LoginContract.View {
+class LoginActivity : BaseActivity(), LoginContract.View {
 
-    private val presenter: LoginContract.Presenter = LoginPresenter()
+
+    @Inject
+    lateinit var presenter: LoginContract.Presenter
+
     private var usernameValid = false
     private var passwordValid = false
 
@@ -25,9 +30,17 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
         btnLogin.setOnClickListener { onBtnLoginClicked() }
 
-        etUsername.doAfterTextChanged { userNameTextChanged() }
+        etEpisodeName.doAfterTextChanged { userNameTextChanged() }
         etPassword.doAfterTextChanged { passwordTextChanged() }
 
+    }
+
+    override fun inject(activityComponent: ActivityComponent) {
+        activityComponent.inject(this)
+    }
+
+    override fun getPresenter(): BasePresenter {
+        return presenter as BasePresenter
     }
 
     private fun onBtnLoginClicked() {
@@ -35,11 +48,11 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
         if (usernameValid && passwordValid) {
             passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(LoginPresenter.INTENT_KEY, etUsername.text.toString())
+            intent.putExtra(LoginPresenter.INTENT_KEY, etEpisodeName.text.toString())
             presenter.login(intent)
         } else {
             if (!usernameValid) {
-                etUsername.error = "Username cant be empty"
+                etEpisodeName.error = "Username cant be empty"
             }
 
             if (!passwordValid) {
@@ -52,7 +65,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
     private fun userNameTextChanged() {
-        presenter.subscribeToUserNameObservable(etUsername.textChanges())
+        presenter.subscribeToUserNameObservable(etEpisodeName.textChanges())
 
     }
 

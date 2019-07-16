@@ -5,7 +5,7 @@
     android:id="@+id/activityLoginLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ui.login.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <ImageView
         android:id="@+id/ivAppLogo"
@@ -69,6 +69,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="72dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/round_btn"
         android:text="@string/login_activity_log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,21 +3,21 @@
     package="hr.foreal.showsmarkosoljic">
 
     <application
-        android:name=".ui.base.BaseApplication"
+        android:name="hr.foreal.showsmarkosoljic.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyCustomAppTheme">
-        <activity android:name="hr.foreal.showsmarkosoljic.ui.ui.login.LoginActivity">
+        <activity android:name="hr.foreal.showsmarkosoljic.ui.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"
+        <activity android:name="hr.foreal.showsmarkosoljic.ui.main.MainActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"></activity>
     </application>
 

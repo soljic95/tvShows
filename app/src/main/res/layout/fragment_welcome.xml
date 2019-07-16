@@ -5,7 +5,7 @@
                                                    android:id="@+id/welcomeFragmentLayout"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   tools:context=".ui.ui.welcome.WelcomeFragment">
+                                                   tools:context=".ui.welcome.WelcomeFragment">
 
     <ImageView
             android:id="@+id/imageView"

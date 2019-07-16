@@ -1,7 +1,7 @@
 package hr.foreal.showsmarkosoljic.ui.main
 
-import hr.foreal.showsmarkosoljic.ui.base.BasePresenter
-import hr.foreal.showsmarkosoljic.ui.router.Router
+import hr.foreal.showsmarkosoljic.base.BasePresenter
+import hr.foreal.showsmarkosoljic.router.Router
 
 class MainPresenter(router: Router) : MainContract.Presenter, BasePresenter(router) {
 

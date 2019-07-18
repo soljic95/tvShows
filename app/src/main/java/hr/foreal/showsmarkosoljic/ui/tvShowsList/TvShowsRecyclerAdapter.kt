@@ -39,7 +39,7 @@ class TvShowsRecyclerAdapter(private val listener: OnContainerClicked) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         with(holder.itemView) {
-            tvEpisodeNumber.text = showList[position].name
+            tvSeasonNumber.text = showList[position].name
             tvEpisodeName.text = showList[position].airDate.toString()
             tvShowsItemLayoutContainer.setOnClickListener { listener.openShowDetails(showList[position]) }
 

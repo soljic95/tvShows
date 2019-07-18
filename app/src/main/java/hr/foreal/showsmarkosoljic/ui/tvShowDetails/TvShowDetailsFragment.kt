@@ -30,7 +30,7 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
         }
     }
 
-    private var episodeList: ArrayList<String> = arrayListOf()
+    private var episodeList: ArrayList<Episode> = arrayListOf()
 
     private lateinit var tvShow: TvShow
     private lateinit var adapter: EpisodesRecyclerAdapter

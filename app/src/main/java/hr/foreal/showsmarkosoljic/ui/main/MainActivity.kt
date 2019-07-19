@@ -24,8 +24,8 @@ class MainActivity : BaseActivity(), MainContract.View {
     lateinit var presenter: MainContract.Presenter
     private val PERMISSION_REQUEST_CODE = 200
     val CAMERA_REQUEST_CODE = 10
-    private val IMAGE_PICK_CODE = 1000;
-    private val PERMISSION_CODE = 1001;
+    private val IMAGE_PICK_CODE = 1000
+    private val PERMISSION_CODE = 1001
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

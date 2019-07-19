@@ -9,6 +9,8 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.Images
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat.requestPermissions
@@ -26,8 +28,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     lateinit var presenter: MainContract.Presenter
     val CAMERA_REQUEST_CODE = 10
-    private val IMAGE_PICK_CODE = 1000
-    private val GALLERY_PERMISSION_CODE = 1001
+    val GALLERY_REQUEST_CODE = 11
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,12 +54,11 @@ class MainActivity : BaseActivity(), MainContract.View {
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
+        when (requestCode) {//TODO Make it pretty
             CAMERA_REQUEST_CODE -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_SHORT).show()
                 openCamera()
 
-                // main logic
             } else {
                 Toast.makeText(applicationContext, "Permission Denied", Toast.LENGTH_SHORT).show()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -67,10 +67,31 @@ class MainActivity : BaseActivity(), MainContract.View {
                             Manifest.permission.CAMERA
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
-                        showMessageOKCancel("You need to allow access permissions",
+                        showMessageOKCancel("You cannot use this feature without camera and external storage approval", //todo extract to resources
                             DialogInterface.OnClickListener { dialog, which ->
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    requestPermission()
+                                    requestCameraPermission()
+                                }
+                            })
+                    }
+                }
+            }
+            GALLERY_REQUEST_CODE -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_SHORT).show()
+                openGallery()
+
+            } else {
+                Toast.makeText(applicationContext, "Permission Denied", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        showMessageOKCancel("You cannot use this feature without camera and external storage approval",//todo extract to resources
+                            DialogInterface.OnClickListener { dialog, which ->
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestGalleryPermission()
                                 }
                             })
                     }
@@ -79,11 +100,21 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
     }
 
-    private fun requestPermission() {
+    private fun requestCameraPermission() {
         requestPermissions(
             this,
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
             CAMERA_REQUEST_CODE
+        )
+
+
+    }
+
+    private fun requestGalleryPermission() {
+        requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+            GALLERY_REQUEST_CODE
         )
 
 
@@ -110,7 +141,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         ) {
             openCamera()
         } else {
-            requestPermission()
+            requestCameraPermission()
         }
     }
 
@@ -118,38 +149,44 @@ class MainActivity : BaseActivity(), MainContract.View {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && data != null && requestCode == IMAGE_PICK_CODE || requestCode == CAMERA_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && data != null && requestCode == CAMERA_REQUEST_CODE) {
             (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment)
-                .setImage(data!!.extras!!.get("data") as Bitmap)
+                .setImage(data.extras?.get("data") as Bitmap)
+            Log.d("marko", "$requestCode")
+        } else if (resultCode == Activity.RESULT_OK && data != null && requestCode == GALLERY_REQUEST_CODE) {
+
+
+            (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment)
+                .setImage(Images.Media.getBitmap(this.contentResolver, data.data))
+            Log.d("marko", "$requestCode")
         }
+
+
     }
 
 
-    fun galleryCheck() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED
-            ) {
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestPermissions(permissions, GALLERY_PERMISSION_CODE)
-            } else {
-                pickImageFromGallery()
-            }
+    fun checkGalleryPermission() {
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            openGallery()
         } else {
-            pickImageFromGallery()
+            requestGalleryPermission()
         }
+
+
     }
 
 
-    private fun pickImageFromGallery() {
-        //  val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        // intent.type = "image/*"
-        // startActivityForResult(intent, IMAGE_PICK_CODE)
+    private fun openGallery() = startActivityForResult(
+        Intent(Intent.ACTION_PICK, Images.Media.EXTERNAL_CONTENT_URI),
+        GALLERY_REQUEST_CODE
+    )
 
 
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(galleryIntent, IMAGE_PICK_CODE)
-    }
 }
 
 

@@ -138,7 +138,7 @@ class AddEpisodeFragment() : BaseFragment() {
         }
 
         view.tvGallery.setOnClickListener {
-            (activity as MainActivity).galleryCheck()
+            (activity as MainActivity).checkGalleryPermission()
             pictureDialog.dismiss()
         }
     }

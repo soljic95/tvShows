@@ -1,12 +1,9 @@
 package hr.foreal.showsmarkosoljic.ui.dialog
 
-
-import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment

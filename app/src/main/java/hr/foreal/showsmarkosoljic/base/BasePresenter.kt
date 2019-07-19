@@ -1,10 +1,9 @@
 package hr.foreal.showsmarkosoljic.base
 
-import hr.foreal.showsmarkosoljic.router.Router
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class BasePresenter(private val router: Router) {
+abstract class BasePresenter {
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -19,10 +18,6 @@ abstract class BasePresenter(private val router: Router) {
 
     protected fun addDisposable(disposable: Disposable) {
         compositeDisposable.add(disposable)
-    }
-
-    protected fun getRouter(): Router {
-        return router
     }
 
 

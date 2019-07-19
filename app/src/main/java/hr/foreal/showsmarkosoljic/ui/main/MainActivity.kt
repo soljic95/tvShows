@@ -9,23 +9,18 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker.checkSelfPermission
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseActivity
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.ActivityComponent
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment
 import hr.foreal.showsmarkosoljic.ui.login.LoginPresenter
-import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainContract.View {
 
 
-    @Inject
     lateinit var presenter: MainContract.Presenter
     private val PERMISSION_REQUEST_CODE = 200
     val CAMERA_REQUEST_CODE = 10
@@ -36,16 +31,19 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setPresenter()
         presenter.setView(this)
         if (savedInstanceState == null) {
             presenter.showWelcomeFragment(intent.getStringExtra(LoginPresenter.INTENT_KEY))
         }
 
+
     }
 
-    override fun inject(activityComponent: ActivityComponent) {
-        activityComponent.inject(this)
+    override fun setPresenter() {
+        presenter = MainPresenter(RouterImpl(this, supportFragmentManager))
     }
+
 
     override fun getPresenter(): BasePresenter {
         return presenter as BasePresenter

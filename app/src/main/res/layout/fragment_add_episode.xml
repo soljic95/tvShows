@@ -4,6 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:id="@+id/addEpisodeLayout"
+                                                   android:background="@android:color/white"
                                                    android:layout_height="match_parent"
                                                    tools:context=".ui.addEpisode.AddEpisodeFragment">
 
@@ -20,8 +21,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/episodeImage"
-            android:layout_width="140dp"
-            android:layout_height="106dp"
+            android:layout_width="236dp"
+            android:layout_height="144dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
@@ -32,7 +33,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvUploadPhoto"
             app:layout_constraintEnd_toEndOf="@+id/tvUploadPhoto"
             app:layout_constraintStart_toStartOf="@+id/tvUploadPhoto"
-            app:layout_constraintTop_toTopOf="@+id/icCamera"/>
+            app:layout_constraintTop_toTopOf="@+id/icCamera" app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintVertical_bias="0.239"/>
 
     <ImageView
             android:id="@+id/icCamera"

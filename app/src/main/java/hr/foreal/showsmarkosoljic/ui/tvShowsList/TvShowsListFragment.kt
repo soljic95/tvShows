@@ -10,17 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.FragmentComponent
 import hr.foreal.showsmarkosoljic.model.StaticEpisodes
 import hr.foreal.showsmarkosoljic.model.TvShow
-import hr.foreal.showsmarkosoljic.ui.main.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_tv_shows_list.*
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import javax.inject.Inject
 
 class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecyclerAdapter.OnContainerClicked {
-
-
     companion object {
         @JvmStatic
         fun newInstance(): TvShowsListFragment {
@@ -31,7 +26,6 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
         val TV_SHOW_BUNDLE_KEY = "tv_show_bundle_key"
     }
 
-    @Inject
     lateinit var presenter: TvShowsContract.Presenter
 
     private lateinit var adapter: TvShowsRecyclerAdapter
@@ -53,9 +47,10 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
 
     }
 
-    override fun inject(fragmentComponent: FragmentComponent) {
-        fragmentComponent.inject(this)
+    override fun setPresenter() {
+        presenter = TvShowsPresenter(RouterImpl(requireActivity(), requireFragmentManager()))
     }
+
 
     override fun getPresenter(): BasePresenter {
         return presenter as BasePresenter
@@ -63,7 +58,7 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
 
     override fun openShowDetails(show: TvShow) {
         var bundle = Bundle()
-        bundle.putParcelable(TV_SHOW_BUNDLE_KEY,show)
+        bundle.putParcelable(TV_SHOW_BUNDLE_KEY, show)
         presenter.listItemClicked(bundle)
     }
 
@@ -77,9 +72,6 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
         adapter.setShows(StaticEpisodes.getShows())
 
     }
-
-
-
 
 
 }

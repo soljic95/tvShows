@@ -8,14 +8,12 @@ import android.view.ViewGroup
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.FragmentComponent
-import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import javax.inject.Inject
 
 class WelcomeFragment : BaseFragment(), WelcomeContract.View {
 
-    @Inject
+
     lateinit var presenter: WelcomeContract.Presenter
 
     companion object {
@@ -44,9 +42,10 @@ class WelcomeFragment : BaseFragment(), WelcomeContract.View {
         showTvShowsListScreen()
     }
 
-    override fun inject(fragmentComponent: FragmentComponent) {
-        fragmentComponent.inject(this)
+    override fun setPresenter() {
+        presenter = WelcomePresenter(RouterImpl(requireActivity(), requireFragmentManager()))
     }
+
 
     override fun getPresenter(): BasePresenter {
         return presenter as BasePresenter

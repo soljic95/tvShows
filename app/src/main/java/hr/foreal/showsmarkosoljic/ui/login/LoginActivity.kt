@@ -8,15 +8,13 @@ import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseActivity
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.ActivityComponent
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import javax.inject.Inject
 
 class LoginActivity : BaseActivity(), LoginContract.View {
 
 
-    @Inject
     lateinit var presenter: LoginContract.Presenter
 
     private var usernameValid = false
@@ -26,6 +24,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setPresenter()
         presenter.setView(this)
 
         btnLogin.setOnClickListener { onBtnLoginClicked() }
@@ -35,9 +34,10 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     }
 
-    override fun inject(activityComponent: ActivityComponent) {
-        activityComponent.inject(this)
+    override fun setPresenter() {
+        presenter = LoginPresenter(RouterImpl(this, supportFragmentManager))
     }
+
 
     override fun getPresenter(): BasePresenter {
         return presenter as BasePresenter

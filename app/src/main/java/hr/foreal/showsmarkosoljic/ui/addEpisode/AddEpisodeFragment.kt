@@ -3,37 +3,43 @@ package hr.foreal.showsmarkosoljic.ui.addEpisode
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.FragmentComponent
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.StaticEpisodes
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.dialog.ChoosePictureLocation
 import hr.foreal.showsmarkosoljic.ui.dialog.NumberPickerDialogFragment
 import kotlinx.android.synthetic.main.fragment_add_episode.*
 import javax.inject.Inject
 
-class AddEpisodeFragment(private val tvShowName: String) : BaseFragment() {
-
-
+class AddEpisodeFragment : BaseFragment() {
     companion object {
         @JvmStatic
         fun newInstance(tvShowName: String): AddEpisodeFragment {
-            return AddEpisodeFragment(tvShowName)
+            var fragment = AddEpisodeFragment()
+            fragment.setShowName(tvShowName)
+            return fragment
         }
 
         val ADD_EPISODE_FRAGMENT_TAG = "AddEpisode"
 
     }
 
-    @Inject
-    lateinit var presenter: AddEpisodeContract.Presenter
+
+    private var seasonNumber: Int = 1
+    private var episodeNumber: Int = 1
+    private lateinit var showName: String
+    private lateinit var presenter: AddEpisodeContract.Presenter
+    private var pictureUri: Uri? = null
 
 
     override fun onCreateView(
@@ -46,6 +52,7 @@ class AddEpisodeFragment(private val tvShowName: String) : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
+        setEpisodeInfo(seasonNumber, episodeNumber)
         episodeImage.setOnClickListener { showPictureDialog() }
         btnSave.setOnClickListener {
             addEpisode(
@@ -64,9 +71,15 @@ class AddEpisodeFragment(private val tvShowName: String) : BaseFragment() {
 
     }
 
-    override fun inject(fragmentComponent: FragmentComponent) {
-        fragmentComponent.inject(this)
+    private fun setShowName(tvShowName: String) {
+        showName = tvShowName
     }
+
+    override fun setPresenter() {
+        presenter = AddEpisodePresenter(RouterImpl(requireActivity(), requireFragmentManager()))
+
+    }
+
 
     override fun getPresenter(): BasePresenter {
 
@@ -90,7 +103,8 @@ class AddEpisodeFragment(private val tvShowName: String) : BaseFragment() {
 
     private fun addEpisode(title: String, season: String, episode: String, description: String) {
         val episode = Episode(title, season, episode, description)
-        when (tvShowName) {
+        Log.d("marko", showName)
+        when (showName) {
             "The Office" -> StaticEpisodes.theOffice.listOfEpisodes.add(episode)
             "The Big Bang Theory" -> StaticEpisodes.bigBang.listOfEpisodes.add(episode)
             "Jane the Virgin" -> StaticEpisodes.janeTheVirgin.listOfEpisodes.add(episode)
@@ -116,26 +130,61 @@ class AddEpisodeFragment(private val tvShowName: String) : BaseFragment() {
     }
 
     fun setEpisodeInfo(season: Int, episode: Int) {
+        seasonNumber = season
+        episodeNumber = episode
+
         if (season < 10) {
-            tvSeason.text = String.format(resources.getString(R.string.season_format), "0$season")
+            tvSeason.text = String.format(resources.getString(R.string.season_format), "0$seasonNumber")
         } else {
-            tvSeason.text = String.format(resources.getString(R.string.season_format), season)
+            tvSeason.text = String.format(resources.getString(R.string.season_format), seasonNumber)
         }
 
+
         if (episode < 10) {
-            tvEpisode.text = String.format(resources.getString(R.string.episode_format), "0$episode")
+            tvEpisode.text = String.format(resources.getString(R.string.episode_format), "0$episodeNumber")
         } else {
-            tvEpisode.text = String.format(resources.getString(R.string.season_format), episode)
+            tvEpisode.text = String.format(resources.getString(R.string.season_format), episodeNumber)
         }
     }
 
+
     fun setImage(data: Uri?) {
+        pictureUri = data!!
         Glide.with(context!!)
             .load(data)
-            .centerCrop()
+            .circleCrop()
             .into(episodeImage)
         icCamera.visibility = View.INVISIBLE
         tvUploadPhoto.visibility = View.INVISIBLE
     }
 
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (pictureUri != null) outState.putString("PICTURE_URI", pictureUri.toString())
+        outState.putInt("SEASON", seasonNumber)
+        outState.putInt("EPISODE", episodeNumber)
+        outState.putString("TVSHOW", showName)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getString("PICTURE_URI") != null) {
+                pictureUri = savedInstanceState.getString("PICTURE_URI").toUri()
+                setImage(pictureUri)
+            }
+            seasonNumber = savedInstanceState.getInt("SEASON")
+            episodeNumber = savedInstanceState.getInt("EPISODE")
+            setEpisodeInfo(seasonNumber, episodeNumber)
+            showName = savedInstanceState.getString("TVSHOW")
+        }
+
+    }
+
+
 }
+
+
+

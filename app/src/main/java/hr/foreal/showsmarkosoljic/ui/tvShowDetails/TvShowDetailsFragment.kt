@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
 import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.dagger.component.FragmentComponent
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
+import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
 import kotlinx.android.synthetic.main.fragment_tv_show_details.*
 import javax.inject.Inject
@@ -37,7 +37,6 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
 
-    @Inject
     lateinit var presenter: TvShowDetailsContract.Presenter
 
     override fun onCreateView(
@@ -66,9 +65,14 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     }
 
-    override fun inject(fragmentComponent: FragmentComponent) {
-        fragmentComponent.inject(this)
+    override fun setPresenter() {
+        presenter = TvShowDetailsPresenter(
+            RouterImpl(
+                requireActivity(), requireFragmentManager()
+            )
+        )
     }
+
 
     override fun getPresenter(): BasePresenter {
         return presenter as BasePresenter

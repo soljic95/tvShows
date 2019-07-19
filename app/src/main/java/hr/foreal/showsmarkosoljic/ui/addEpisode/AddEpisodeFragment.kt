@@ -1,15 +1,13 @@
 package hr.foreal.showsmarkosoljic.ui.addEpisode
 
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
@@ -22,7 +20,7 @@ import kotlinx.android.synthetic.main.choose_picture_layout.view.*
 import kotlinx.android.synthetic.main.fragment_add_episode.*
 import kotlinx.android.synthetic.main.number_picker_dialog_layout.view.*
 
-class AddEpisodeFragment : BaseFragment() {
+class AddEpisodeFragment() : BaseFragment() {
     companion object {
         @JvmStatic
         fun newInstance(tvShowName: String): AddEpisodeFragment {
@@ -47,7 +45,7 @@ class AddEpisodeFragment : BaseFragment() {
 
     private var seasonNumber: Int = 1
     private var episodeNumber: Int = 1
-    private var pictureUri: Uri? = null
+    private var bitmapImage: Bitmap? = null
 
     private lateinit var showName: String
     private lateinit var presenter: AddEpisodeContract.Presenter
@@ -135,7 +133,7 @@ class AddEpisodeFragment : BaseFragment() {
         pictureDialog.show()
 
         view.tvCamera.setOnClickListener {
-            (activity as MainActivity).checkPermission()
+            (activity as MainActivity).checkCameraPermission()
             pictureDialog.dismiss()
         }
 
@@ -189,9 +187,9 @@ class AddEpisodeFragment : BaseFragment() {
     }
 
 
-    fun setImage(data: Uri?) {
-        pictureUri = data!!
-        Glide.with(context!!)
+    fun setImage(data: Bitmap?) {
+        bitmapImage = data
+        Glide.with(requireContext())
             .load(data)
             .circleCrop()
             .into(episodeImage)
@@ -202,7 +200,7 @@ class AddEpisodeFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (pictureUri != null) outState.putString(PICTURE_KEY, pictureUri.toString())
+        if (bitmapImage != null) outState.putParcelable(PICTURE_KEY, bitmapImage)
         outState.putInt(SEASON_KEY, seasonNumber)
         outState.putInt(EPISODE_KEY, episodeNumber)
         outState.putString(TVSHOW_KEY, showName)
@@ -211,9 +209,9 @@ class AddEpisodeFragment : BaseFragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {
-            if (savedInstanceState.getString(PICTURE_KEY) != null) {
-                pictureUri = savedInstanceState.getString(PICTURE_KEY).toUri()
-                setImage(pictureUri)
+            if (savedInstanceState.getParcelable<Bitmap>(PICTURE_KEY) != null) {
+                bitmapImage = savedInstanceState.getParcelable(PICTURE_KEY)
+                setImage(bitmapImage)
             }
             seasonNumber = savedInstanceState.getInt(SEASON_KEY)
             episodeNumber = savedInstanceState.getInt(EPISODE_KEY)

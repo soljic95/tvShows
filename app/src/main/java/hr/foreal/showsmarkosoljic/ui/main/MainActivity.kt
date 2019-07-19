@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat.requestPermissions
@@ -18,14 +20,14 @@ import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment
 import hr.foreal.showsmarkosoljic.ui.login.LoginPresenter
 
+
 class MainActivity : BaseActivity(), MainContract.View {
 
 
     lateinit var presenter: MainContract.Presenter
-    private val PERMISSION_REQUEST_CODE = 200
     val CAMERA_REQUEST_CODE = 10
     private val IMAGE_PICK_CODE = 1000
-    private val PERMISSION_CODE = 1001
+    private val GALLERY_PERMISSION_CODE = 1001
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +54,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PERMISSION_REQUEST_CODE -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            CAMERA_REQUEST_CODE -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_SHORT).show()
                 openCamera()
 
@@ -78,12 +80,13 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     private fun requestPermission() {
-
         requestPermissions(
             this,
-            arrayOf(Manifest.permission.CAMERA),
-            PERMISSION_REQUEST_CODE
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            CAMERA_REQUEST_CODE
         )
+
+
     }
 
 
@@ -96,11 +99,14 @@ class MainActivity : BaseActivity(), MainContract.View {
             .show()
     }
 
-    fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(
+    fun checkCameraPermission() {
+        if ((ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED)
         ) {
             openCamera()
         } else {
@@ -108,16 +114,13 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
     }
 
-    private fun openCamera() = startActivityForResult(Intent("android.media.action.IMAGE_CAPTURE"), CAMERA_REQUEST_CODE)
+    private fun openCamera() = startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE), CAMERA_REQUEST_CODE)
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK
-            && (requestCode == CAMERA_REQUEST_CODE || requestCode == IMAGE_PICK_CODE)
-        ) {
-            (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment).setImage(
-                data?.data
-            )
+        if (resultCode == Activity.RESULT_OK && data != null && requestCode == IMAGE_PICK_CODE || requestCode == CAMERA_REQUEST_CODE) {
+            (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment)
+                .setImage(data!!.extras!!.get("data") as Bitmap)
         }
     }
 
@@ -128,7 +131,7 @@ class MainActivity : BaseActivity(), MainContract.View {
                 PackageManager.PERMISSION_DENIED
             ) {
                 val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestPermissions(permissions, PERMISSION_CODE)
+                requestPermissions(permissions, GALLERY_PERMISSION_CODE)
             } else {
                 pickImageFromGallery()
             }
@@ -139,9 +142,13 @@ class MainActivity : BaseActivity(), MainContract.View {
 
 
     private fun pickImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+        //  val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        // intent.type = "image/*"
+        // startActivityForResult(intent, IMAGE_PICK_CODE)
+
+
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(galleryIntent, IMAGE_PICK_CODE)
     }
 }
 

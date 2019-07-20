@@ -3,7 +3,7 @@ package hr.foreal.showsmarkosoljic.ui.main
 import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
-class MainPresenter(router: Router) : MainContract.Presenter, BasePresenter(router) {
+class MainPresenter(private val router: Router) : MainContract.Presenter, BasePresenter() {
 
     private lateinit var view: MainContract.View
 
@@ -13,7 +13,7 @@ class MainPresenter(router: Router) : MainContract.Presenter, BasePresenter(rout
     }
 
     override fun showWelcomeFragment(userName: String) {
-        getRouter().showWelcomeScreen(userName)
+        router.showWelcomeScreen(userName)
     }
 
 

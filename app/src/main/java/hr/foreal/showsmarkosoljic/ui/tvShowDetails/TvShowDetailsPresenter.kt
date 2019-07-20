@@ -3,8 +3,8 @@ package hr.foreal.showsmarkosoljic.ui.tvShowDetails
 import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
-class TvShowDetailsPresenter(router: Router) :
-    TvShowDetailsContract.Presenter, BasePresenter(router) {
+class TvShowDetailsPresenter(private val router: Router) :
+    TvShowDetailsContract.Presenter, BasePresenter() {
 
     private lateinit var view: TvShowDetailsContract.View
 
@@ -13,10 +13,10 @@ class TvShowDetailsPresenter(router: Router) :
     }
 
     override fun onUpButtonClicked() {
-        getRouter().goBack()
+        router.goBack()
     }
 
     override fun fabClicked(tvShowName: String) {
-        getRouter().showAddEpisodeScreen(tvShowName)
+        router.showAddEpisodeScreen(tvShowName)
     }
 }

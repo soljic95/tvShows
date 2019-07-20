@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:padding="24dp"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/tvCamera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:padding="4dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:textColor="@color/black"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginTop="4dp"
+            android:text="Camera"/>
+
+    <TextView
+            android:id="@+id/tvGallery"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gallery"
+            android:textColor="@color/black"
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackground"
+            android:textSize="24sp"
+            android:layout_marginTop="4dp"
+    />
+
+</LinearLayout>

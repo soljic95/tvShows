@@ -7,7 +7,7 @@ import hr.foreal.showsmarkosoljic.router.Router
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class LoginPresenter(router: Router) : LoginContract.Presenter, BasePresenter(router) {
+class LoginPresenter(private val router: Router) : LoginContract.Presenter, BasePresenter() {
     companion object {
         @JvmStatic
         val INTENT_KEY = "KEY"
@@ -57,7 +57,7 @@ class LoginPresenter(router: Router) : LoginContract.Presenter, BasePresenter(ro
 
     override fun login(intent: Intent) {
 
-        getRouter().showMainScreen(intent)
+        router.showMainScreen(intent)
 
     }
 

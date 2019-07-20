@@ -1,25 +1,15 @@
 package hr.foreal.showsmarkosoljic.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
-import hr.foreal.showsmarkosoljic.dagger.component.DaggerFragmentComponent
-import hr.foreal.showsmarkosoljic.dagger.component.FragmentComponent
 
 abstract class BaseFragment : Fragment() {
 
-    private lateinit var fragmentComponent: FragmentComponent
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        fragmentComponent = DaggerFragmentComponent.builder()
-            .activityComponent((activity as BaseActivity).getActivityComponent())
-            .build()
-
-        inject(fragmentComponent)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setPresenter()
+        super.onViewCreated(view, savedInstanceState)
     }
-
-    abstract fun inject(fragmentComponent: FragmentComponent)
 
     abstract fun getPresenter(): BasePresenter
 
@@ -32,6 +22,8 @@ abstract class BaseFragment : Fragment() {
         getPresenter().activate()
         super.onResume()
     }
+
+    abstract fun setPresenter()
 
 
 }

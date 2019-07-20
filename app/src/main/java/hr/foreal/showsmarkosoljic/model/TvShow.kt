@@ -12,7 +12,7 @@ data class TvShow(
     var showDetailsImageId: Int,
     var name: String,
     var airDate: Long,
-    var listOfEpisodes: ArrayList<String> = arrayListOf(),
+    var listOfEpisodes: ArrayList<Episode> = arrayListOf(),
     var showDescription: String
 
 

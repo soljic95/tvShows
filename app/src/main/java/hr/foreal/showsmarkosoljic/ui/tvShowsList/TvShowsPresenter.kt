@@ -4,7 +4,7 @@ import android.os.Bundle
 import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
-class TvShowsPresenter(router: Router) : TvShowsContract.Presenter, BasePresenter(router) {
+class TvShowsPresenter(private val router: Router) : TvShowsContract.Presenter, BasePresenter() {
 
     private lateinit var view: TvShowsContract.View
 
@@ -17,7 +17,7 @@ class TvShowsPresenter(router: Router) : TvShowsContract.Presenter, BasePresente
     }
 
     override fun listItemClicked(bundle: Bundle) {
-        getRouter().showTvShowDetailsScreen(bundle)
+        router.showTvShowDetailsScreen(bundle)
     }
 
 }

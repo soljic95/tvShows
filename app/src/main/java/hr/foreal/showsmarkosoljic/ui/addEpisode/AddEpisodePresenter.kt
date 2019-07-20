@@ -3,8 +3,8 @@ package hr.foreal.showsmarkosoljic.ui.addEpisode
 import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
-class AddEpisodePresenter(router: Router) : BasePresenter(router), AddEpisodeContract.Presenter {
-
+class AddEpisodePresenter(private val router: Router) : BasePresenter()
+    , AddEpisodeContract.Presenter {
 
     private lateinit var view: AddEpisodeContract.View
 
@@ -13,7 +13,7 @@ class AddEpisodePresenter(router: Router) : BasePresenter(router), AddEpisodeCon
     }
 
     override fun onUpButtonClicked() {
-        getRouter().goBack()
+        router.goBack()
     }
 
     override fun onSaveButtonClicked(title: String, season: String, episode: String, description: String) {

@@ -1,13 +1,14 @@
-package hr.foreal.showsmarkosoljic.ui.login
+package hr.foreal.showsmarkosoljic.viewModel
 
 import android.content.Intent
+import androidx.lifecycle.ViewModel
 import com.jakewharton.rxbinding2.InitialValueObservable
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
+import hr.foreal.showsmarkosoljic.ui.login.LoginContract
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class LoginPresenter(private val router: Router) : LoginContract.Presenter, BasePresenter() {
+class LoginViewModel(private val router: Router) : ViewModel() {
     companion object {
         @JvmStatic
         val INTENT_KEY = "KEY"
@@ -17,25 +18,25 @@ class LoginPresenter(private val router: Router) : LoginContract.Presenter, Base
     private lateinit var view: LoginContract.View
 
 
-    override fun setView(view: LoginContract.View) {
+    fun setView(view: LoginContract.View) {
         this.view = view
     }
 
 
-    override fun subscribeToUserNameObservable(observable: InitialValueObservable<CharSequence>) {
-        addDisposable(observable.subscribeOn(Schedulers.io())
+    fun subscribeToUserNameObservable(observable: InitialValueObservable<CharSequence>) {
+        observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 checkUsername(it.toString())
-            })
+            }
     }
 
-    override fun subscribeToPasswordObservable(observable: InitialValueObservable<CharSequence>) {
-        addDisposable(observable.subscribeOn(Schedulers.io())
+    fun subscribeToPasswordObservable(observable: InitialValueObservable<CharSequence>) {
+        observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 checkPassword(it.toString())
-            })
+            }
     }
 
     private fun checkUsername(username: String) {
@@ -55,7 +56,7 @@ class LoginPresenter(private val router: Router) : LoginContract.Presenter, Base
 
     }
 
-    override fun login(intent: Intent) {
+    fun login(intent: Intent) {
 
         router.showMainScreen(intent)
 

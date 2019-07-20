@@ -8,19 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.model.Episode
-import hr.foreal.showsmarkosoljic.model.StaticEpisodes
-import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.choose_picture_layout.view.*
 import kotlinx.android.synthetic.main.fragment_add_episode.*
 import kotlinx.android.synthetic.main.number_picker_dialog_layout.view.*
 
-class AddEpisodeFragment() : BaseFragment() {
+class AddEpisodeFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance(tvShowName: String): AddEpisodeFragment {
@@ -48,7 +47,7 @@ class AddEpisodeFragment() : BaseFragment() {
     private var bitmapImage: Bitmap? = null
 
     private lateinit var showName: String
-    private lateinit var presenter: AddEpisodeContract.Presenter
+    private lateinit var viewModel: MainViewModel
 
 
     override fun onCreateView(
@@ -60,6 +59,7 @@ class AddEpisodeFragment() : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         initToolbar()
         setEpisodeInfo(seasonNumber, episodeNumber)
         episodeImage.setOnClickListener { showPictureDialog() }
@@ -83,14 +83,6 @@ class AddEpisodeFragment() : BaseFragment() {
         showName = tvShowName
     }
 
-    override fun setPresenter() {
-        presenter = AddEpisodePresenter(RouterImpl(requireActivity(), requireFragmentManager()))
-    }
-
-    override fun getPresenter(): BasePresenter {
-
-        return presenter as BasePresenter
-    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -100,25 +92,19 @@ class AddEpisodeFragment() : BaseFragment() {
     }
 
     private fun initToolbar() {
-        toolbar2.setNavigationOnClickListener { presenter.onUpButtonClicked() }
+        toolbar2.setNavigationOnClickListener { backButtonClicked() }
     }
 
     private fun backButtonClicked() {
-        presenter.onUpButtonClicked()
+        viewModel.onUpButtonClicked()
     }
 
     private fun addEpisode(title: String, season: String, episode: String, description: String) {
         val episode = Episode(title, season, episode, description)
-        when (showName) {
-            "The Office" -> StaticEpisodes.theOffice.listOfEpisodes.add(episode) //todo ENUM?
-            "The Big Bang Theory" -> StaticEpisodes.bigBang.listOfEpisodes.add(episode)
-            "Jane the Virgin" -> StaticEpisodes.janeTheVirgin.listOfEpisodes.add(episode)
-            "House M.D." -> StaticEpisodes.house.listOfEpisodes.add(episode)
-            "Sherlock" -> StaticEpisodes.sherlock.listOfEpisodes.add(episode)
-            "Its allways sunny in Philadelphia" -> StaticEpisodes.itsAllwaysSunny.listOfEpisodes.add(episode)
-        }
+        viewModel.addEpisode(showName, episode)
 
-        presenter.onUpButtonClicked()
+
+        backButtonClicked()
 
     }
 

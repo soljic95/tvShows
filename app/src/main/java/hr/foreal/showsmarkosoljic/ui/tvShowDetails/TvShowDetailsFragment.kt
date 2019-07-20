@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
-import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_tv_show_details.*
-import javax.inject.Inject
 
 
-class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
+class TvShowDetailsFragment : Fragment() {
 
 
     companion object {
@@ -37,7 +37,7 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
 
-    lateinit var presenter: TvShowDetailsContract.Presenter
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,12 +48,12 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.setView(this)
-        setHasOptionsMenu(true)
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         tvShow = arguments!!.getParcelable(TvShowsListFragment.TV_SHOW_BUNDLE_KEY)
         setToolbar()
         init()
         initRecyclerAdapter()
+        viewModel.getAllShows().observe(this, Observer { when }) // todo finish this -> kako si planirao : provjeriti koja je epizoda i onda s obzirom na ime iz viewmodela uzeti taj show i popuniti epizode
         setEpisodes()
 
         fab.setOnClickListener {
@@ -65,22 +65,9 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     }
 
-    override fun setPresenter() {
-        presenter = TvShowDetailsPresenter(
-            RouterImpl(
-                requireActivity(), requireFragmentManager()
-            )
-        )
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
-    }
-
 
     private fun setToolbar() {
-        tvShowDetailToolbar.setNavigationOnClickListener { presenter.onUpButtonClicked() }
+        tvShowDetailToolbar.setNavigationOnClickListener { viewModel.onUpButtonClicked() }
         toolbar_image.setBackgroundResource(tvShow.showDetailsImageId)
 
     }
@@ -91,8 +78,10 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     }
 
+
+
     private fun addEpisodes() {
-        presenter.fabClicked(tvShow.name)
+        viewModel.fabClicked(tvShow.name)
     }
 
 

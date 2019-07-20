@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.RouterImpl
 import kotlinx.android.synthetic.main.fragment_welcome.*
 

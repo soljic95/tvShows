@@ -5,17 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.model.StaticEpisodes
 import hr.foreal.showsmarkosoljic.model.TvShow
-import hr.foreal.showsmarkosoljic.router.RouterImpl
-import javax.inject.Inject
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 
-class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecyclerAdapter.OnContainerClicked {
+class TvShowsListFragment : Fragment(), TvShowsRecyclerAdapter.OnContainerClicked {
     companion object {
         @JvmStatic
         fun newInstance(): TvShowsListFragment {
@@ -26,7 +25,7 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
         val TV_SHOW_BUNDLE_KEY = "tv_show_bundle_key"
     }
 
-    lateinit var presenter: TvShowsContract.Presenter
+    private lateinit var viewModel: MainViewModel
 
     private lateinit var adapter: TvShowsRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
@@ -41,25 +40,19 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.setView(this)
         initRecyclerView()
-
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
+        viewModel.getAllShows().observe(this, Observer {
+            adapter.setShows(it)
+        })
 
     }
 
-    override fun setPresenter() {
-        presenter = TvShowsPresenter(RouterImpl(requireActivity(), requireFragmentManager()))
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
-    }
 
     override fun openShowDetails(show: TvShow) {
         var bundle = Bundle()
         bundle.putParcelable(TV_SHOW_BUNDLE_KEY, show)
-        presenter.listItemClicked(bundle)
+        viewModel.listItemClicked(bundle)
     }
 
     private fun initRecyclerView() {
@@ -69,7 +62,7 @@ class TvShowsListFragment : BaseFragment(), TvShowsContract.View, TvShowsRecycle
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
-        adapter.setShows(StaticEpisodes.getShows())
+
 
     }
 

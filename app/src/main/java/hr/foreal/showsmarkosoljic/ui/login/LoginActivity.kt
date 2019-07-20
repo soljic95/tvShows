@@ -3,20 +3,22 @@ package hr.foreal.showsmarkosoljic.ui.login
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseActivity
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : BaseActivity(), LoginContract.View {
+class LoginActivity : AppCompatActivity(), LoginContract.View {
+//Todo remove view, implement live data for observing
 
-
-    lateinit var presenter: LoginContract.Presenter
-
+    private lateinit var viewModel: LoginViewModel
     private var usernameValid = false
     private var passwordValid = false
 
@@ -24,9 +26,14 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        setPresenter()
-        presenter.setView(this)
-
+        viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return LoginViewModel(
+                    RouterImpl(this@LoginActivity, supportFragmentManager)
+                ) as T
+            }
+        })[LoginViewModel::class.java]
         btnLogin.setOnClickListener { onBtnLoginClicked() }
 
         etEpisodeName.doAfterTextChanged { userNameTextChanged() }
@@ -34,22 +41,14 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     }
 
-    override fun setPresenter() {
-        presenter = LoginPresenter(RouterImpl(this, supportFragmentManager))
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
-    }
 
     private fun onBtnLoginClicked() {
 
         if (usernameValid && passwordValid) {
             passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
             val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(LoginPresenter.INTENT_KEY, etEpisodeName.text.toString())
-            presenter.login(intent)
+            intent.putExtra(LoginViewModel.INTENT_KEY, etEpisodeName.text.toString())
+            viewModel.login(intent)
         } else {
             if (!usernameValid) {
                 etEpisodeName.error = "Username cant be empty"
@@ -65,13 +64,13 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     }
 
     private fun userNameTextChanged() {
-        presenter.subscribeToUserNameObservable(etEpisodeName.textChanges())
+        viewModel.subscribeToUserNameObservable(etEpisodeName.textChanges())
 
     }
 
     private fun passwordTextChanged() {
         passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
-        presenter.subscribeToPasswordObservable(etPassword.textChanges())
+        viewModel.subscribeToPasswordObservable(etPassword.textChanges())
 
     }
 

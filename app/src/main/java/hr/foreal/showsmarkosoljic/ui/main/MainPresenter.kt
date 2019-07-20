@@ -1,6 +1,5 @@
 package hr.foreal.showsmarkosoljic.ui.main
 
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
 class MainPresenter(private val router: Router) : MainContract.Presenter, BasePresenter() {

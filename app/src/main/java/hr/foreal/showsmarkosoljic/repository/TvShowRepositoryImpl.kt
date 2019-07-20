@@ -1,9 +1,14 @@
-package hr.foreal.showsmarkosoljic.model
+package hr.foreal.showsmarkosoljic.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import hr.foreal.showsmarkosoljic.R
+import hr.foreal.showsmarkosoljic.model.Episode
+import hr.foreal.showsmarkosoljic.model.TvShow
 
-object StaticEpisodes {
+class TvShowRepositoryImpl : TvShowRepository {
 
+    val tvShowList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
 
     val theOffice = TvShow(
         1,
@@ -57,12 +62,21 @@ object StaticEpisodes {
         "Five friends with big egos and slightly arrogant attitudes are the proprietors of an Irish pub in Philadelphia."
     );
 
-    var showList = arrayListOf(house, theOffice, janeTheVirgin, itsAllwaysSunny, sherlock, bigBang)
 
-
-    fun getShows(): ArrayList<TvShow> {
-        return showList
+    override fun getAllShows(): LiveData<ArrayList<TvShow>> {
+        tvShowList.value = arrayListOf(house, theOffice, janeTheVirgin, itsAllwaysSunny, sherlock, bigBang)
+        return tvShowList
     }
 
-
+    override fun addEpisode(tvShowName: String, episode: Episode) {
+        tvShowList.value?.clear()
+        when (tvShowName) {
+            theOffice.name -> theOffice.listOfEpisodes.add(episode)
+            bigBang.name -> bigBang.listOfEpisodes.add(episode)
+            janeTheVirgin.name -> janeTheVirgin.listOfEpisodes.add(episode)
+            house.name -> house.listOfEpisodes.add(episode)
+            sherlock.name -> sherlock.listOfEpisodes.add(episode)
+            itsAllwaysSunny.name -> itsAllwaysSunny.listOfEpisodes.add(episode)
+        }
+    }
 }

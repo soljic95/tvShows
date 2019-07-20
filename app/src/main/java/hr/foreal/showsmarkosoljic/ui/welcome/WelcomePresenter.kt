@@ -1,7 +1,6 @@
 package hr.foreal.showsmarkosoljic.ui.welcome
 
 import android.os.Handler
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.router.Router
 
 class WelcomePresenter(private val router: Router) : WelcomeContract.Presenter, BasePresenter() {

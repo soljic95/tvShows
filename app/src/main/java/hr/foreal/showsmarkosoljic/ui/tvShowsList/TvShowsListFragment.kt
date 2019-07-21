@@ -42,7 +42,7 @@ class TvShowsListFragment : Fragment(), TvShowsRecyclerAdapter.OnContainerClicke
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
-        viewModel.getAllShows().observe(this, Observer {
+        viewModel.observeShows().observe(this, Observer {
             adapter.setShows(it)
         })
 

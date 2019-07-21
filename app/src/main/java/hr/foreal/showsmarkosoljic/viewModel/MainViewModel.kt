@@ -1,22 +1,47 @@
 package hr.foreal.showsmarkosoljic.viewModel
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
 import hr.foreal.showsmarkosoljic.repository.TvShowRepository
 import hr.foreal.showsmarkosoljic.router.Router
 
-class MainViewModel(private val router: Router, private val repository: TvShowRepository) : ViewModel() {
+class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
+    val ONE_SECOND_DELAY: Long = 1000
 
+    private var showList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
+    private var image: MutableLiveData<Bitmap> = MutableLiveData()
+    private lateinit var router: Router
+
+    fun observeShows(): LiveData<ArrayList<TvShow>> {
+        showList = repository.getAllShows()
+        return showList
+    }
+
+    fun setRouter(router: Router) {
+        this.router = router
+    }
+
+    fun saveImage(bitmap: Bitmap) {
+        image.value = bitmap
+    }
+
+    fun getSavedImage(): LiveData<Bitmap> {
+        return image
+    }
 
     fun listItemClicked(bundle: Bundle) {
         router.showTvShowDetailsScreen(bundle)
     }
 
-    fun getAllShows(): LiveData<ArrayList<TvShow>> {
-        return repository.getAllShows()
+
+    fun observeShowEpisodes(showId: Int): LiveData<ArrayList<Episode>> {
+        return repository.getEpisodes(showId)
     }
 
     fun showWelcomeFragment(userName: String) = router.showWelcomeScreen(userName)
@@ -25,12 +50,27 @@ class MainViewModel(private val router: Router, private val repository: TvShowRe
         router.goBack()
     }
 
-    fun addEpisode(tvShowName: String, episode: Episode) {
-        repository.addEpisode(tvShowName, episode)
+    fun addEpisode(showId: Int, episode: Episode) {
+        repository.addEpisode(showId, episode)
     }
 
-    fun fabClicked(tvShowName: String) {
-        router.showAddEpisodeScreen(tvShowName)
+    fun fabClicked(showId: Int) {
+        router.showAddEpisodeScreen(showId)
     }
+
+    fun init() {
+        var handler = Handler()
+        handler.postDelayed(this::showListScreen, ONE_SECOND_DELAY)
+    }
+
+    private fun showListScreen() {
+        router.showTvShowsListScreen()
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+    }
+
 
 }

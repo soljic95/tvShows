@@ -27,7 +27,7 @@ import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
 import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 
 
-class MainActivity : AppCompatActivity(), MainContract.View {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     val CAMERA_REQUEST_CODE = 10
@@ -41,11 +41,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
                 return MainViewModel(
-                    RouterImpl(this@MainActivity, supportFragmentManager),
                     TvShowRepositoryImpl()
                 ) as T
             }
         })[MainViewModel::class.java]
+        viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager))
         if (savedInstanceState == null) {
             viewModel.showWelcomeFragment(intent.getStringExtra(LoginViewModel.INTENT_KEY))
         }

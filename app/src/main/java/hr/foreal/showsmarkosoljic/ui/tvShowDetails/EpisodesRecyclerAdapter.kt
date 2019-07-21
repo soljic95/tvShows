@@ -11,15 +11,12 @@ import kotlinx.android.synthetic.main.episodes_list_item.view.*
 class EpisodesRecyclerAdapter(private val inflater: LayoutInflater) :
     RecyclerView.Adapter<EpisodesRecyclerAdapter.MyViewHolder>() {
 
-    private var listOfEpisodes = arrayListOf<Episode>()
+    private var listOfEpisodes = arrayListOf<Episode>() // todo ubaciti livedata epizoda pa neka se tu samo vrti
 
-    fun addEpisode(episode: Episode) {
-        listOfEpisodes.add(episode)
-        notifyItemChanged(listOfEpisodes.size + 1)
-    }
-
-    fun clearAdapter() {
+    fun addEpisodes(episodes: ArrayList<Episode>) {
         listOfEpisodes.clear()
+        listOfEpisodes.addAll(episodes)
+        notifyDataSetChanged()
     }
 
 

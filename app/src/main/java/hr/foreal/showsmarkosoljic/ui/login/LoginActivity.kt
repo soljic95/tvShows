@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
                 ) as T
             }
         })[LoginViewModel::class.java]
+        viewModel.setView(this)
         btnLogin.setOnClickListener { onBtnLoginClicked() }
 
         etEpisodeName.doAfterTextChanged { userNameTextChanged() }

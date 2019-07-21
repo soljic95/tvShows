@@ -22,14 +22,13 @@ import kotlinx.android.synthetic.main.number_picker_dialog_layout.view.*
 class AddEpisodeFragment : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(tvShowName: String): AddEpisodeFragment {
+        fun newInstance(showId: Int): AddEpisodeFragment {
             var fragment = AddEpisodeFragment()
-            fragment.setShowName(tvShowName)
+            fragment.setShowID(showId)
             return fragment
         }
 
         val ADD_EPISODE_FRAGMENT_TAG = "AddEpisode"
-
     }
 
     private val MINVALUE = 1
@@ -41,12 +40,11 @@ class AddEpisodeFragment : Fragment() {
     private val EPISODE_KEY = "EPISODE_KEY"
     private val TVSHOW_KEY = "TVSHOW_KEY"
 
-
     private var seasonNumber: Int = 1
     private var episodeNumber: Int = 1
     private var bitmapImage: Bitmap? = null
 
-    private lateinit var showName: String
+    private var showId: Int = 0
     private lateinit var viewModel: MainViewModel
 
 
@@ -79,8 +77,8 @@ class AddEpisodeFragment : Fragment() {
 
     }
 
-    private fun setShowName(tvShowName: String) {
-        showName = tvShowName
+    private fun setShowID(showId: Int) {
+        this.showId = showId
     }
 
 
@@ -101,11 +99,8 @@ class AddEpisodeFragment : Fragment() {
 
     private fun addEpisode(title: String, season: String, episode: String, description: String) {
         val episode = Episode(title, season, episode, description)
-        viewModel.addEpisode(showName, episode)
-
-
+        viewModel.addEpisode(showId, episode)
         backButtonClicked()
-
     }
 
     private fun showPictureDialog() {
@@ -183,13 +178,12 @@ class AddEpisodeFragment : Fragment() {
         tvUploadPhoto.visibility = View.INVISIBLE
     }
 
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (bitmapImage != null) outState.putParcelable(PICTURE_KEY, bitmapImage)
         outState.putInt(SEASON_KEY, seasonNumber)
         outState.putInt(EPISODE_KEY, episodeNumber)
-        outState.putString(TVSHOW_KEY, showName)
+        outState.putInt(TVSHOW_KEY, showId)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -202,7 +196,7 @@ class AddEpisodeFragment : Fragment() {
             seasonNumber = savedInstanceState.getInt(SEASON_KEY)
             episodeNumber = savedInstanceState.getInt(EPISODE_KEY)
             setEpisodeInfo(seasonNumber, episodeNumber)
-            showName = savedInstanceState.getString(TVSHOW_KEY)
+            showId = savedInstanceState.getInt(TVSHOW_KEY)
         }
 
     }

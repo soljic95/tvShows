@@ -6,9 +6,11 @@ import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
 
-class TvShowRepositoryImpl : TvShowRepository {
+class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
 
-    val tvShowList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
+
+    private var tvShowList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
+
 
     val theOffice = TvShow(
         1,
@@ -28,7 +30,7 @@ class TvShowRepositoryImpl : TvShowRepository {
         "A woman who moves into an apartment across the hall from two brilliant but socially awkward physicists shows them how little they know about life outside of the laboratory."
     )
     val janeTheVirgin = TvShow(
-        3,
+        7,
         R.drawable.jane_list_poster, R.drawable.jane_details_poster,
         "Jane the Virgin",
         2019,
@@ -63,20 +65,32 @@ class TvShowRepositoryImpl : TvShowRepository {
     );
 
 
-    override fun getAllShows(): LiveData<ArrayList<TvShow>> {
+    override fun getAllShows(): MutableLiveData<ArrayList<TvShow>> {
         tvShowList.value = arrayListOf(house, theOffice, janeTheVirgin, itsAllwaysSunny, sherlock, bigBang)
         return tvShowList
     }
 
-    override fun addEpisode(tvShowName: String, episode: Episode) {
-        tvShowList.value?.clear()
-        when (tvShowName) {
-            theOffice.name -> theOffice.listOfEpisodes.add(episode)
-            bigBang.name -> bigBang.listOfEpisodes.add(episode)
-            janeTheVirgin.name -> janeTheVirgin.listOfEpisodes.add(episode)
-            house.name -> house.listOfEpisodes.add(episode)
-            sherlock.name -> sherlock.listOfEpisodes.add(episode)
-            itsAllwaysSunny.name -> itsAllwaysSunny.listOfEpisodes.add(episode)
+    override fun addEpisode(showId: Int, episode: Episode) {
+        when (showId) {
+            theOffice.id -> theOffice.listOfEpisodes.add(episode)
+            bigBang.id -> bigBang.listOfEpisodes.add(episode)
+            janeTheVirgin.id -> janeTheVirgin.listOfEpisodes.add(episode)
+            house.id -> house.listOfEpisodes.add(episode)
+            sherlock.id -> sherlock.listOfEpisodes.add(episode)
+            itsAllwaysSunny.id -> itsAllwaysSunny.listOfEpisodes.add(episode)
         }
+    }
+
+    override fun getEpisodes(showId: Int): MutableLiveData<ArrayList<Episode>> {
+        val showEpisodes = MutableLiveData<ArrayList<Episode>>()
+        when (showId) {
+            theOffice.id -> showEpisodes.value = theOffice.listOfEpisodes
+            bigBang.id -> showEpisodes.value = bigBang.listOfEpisodes
+            janeTheVirgin.id -> showEpisodes.value = janeTheVirgin.listOfEpisodes
+            house.id -> showEpisodes.value = house.listOfEpisodes
+            sherlock.id -> showEpisodes.value = sherlock.listOfEpisodes
+            itsAllwaysSunny.id -> showEpisodes.value = itsAllwaysSunny.listOfEpisodes
+        }
+        return showEpisodes
     }
 }

@@ -53,9 +53,11 @@ class TvShowDetailsFragment : Fragment() {
         setToolbar()
         init()
         initRecyclerAdapter()
-        viewModel.getAllShows().observe(this, Observer { when }) // todo finish this -> kako si planirao : provjeriti koja je epizoda i onda s obzirom na ime iz viewmodela uzeti taj show i popuniti epizode
-        setEpisodes()
+        viewModel.observeShowEpisodes(tvShow.id).observe(this, Observer {
+            adapter.addEpisodes(it)
+            episodeList.addAll(it)
 
+        })
         fab.setOnClickListener {
             addEpisodes()
         }
@@ -79,9 +81,8 @@ class TvShowDetailsFragment : Fragment() {
     }
 
 
-
     private fun addEpisodes() {
-        viewModel.fabClicked(tvShow.name)
+        viewModel.fabClicked(tvShow.id)
     }
 
 
@@ -93,39 +94,35 @@ class TvShowDetailsFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
-        if (episodeList.isNotEmpty()) {
-            for (ep in episodeList) {
-                adapter.addEpisode(ep)
-            }
-        }
+
     }
 
     private fun checkEpisodeList() {
         if (episodeList.isEmpty()) {
-            ivSleepingPlaceHolder.visibility = View.VISIBLE
-            tvDontWakeHimUp.visibility = View.VISIBLE
-            tvSomeoneIsSleeping.visibility = View.VISIBLE
-            tvAddSomeEpisodes.visibility = View.VISIBLE
+            showViews()
         } else {
-            ivSleepingPlaceHolder.visibility = View.GONE
-            tvDontWakeHimUp.visibility = View.GONE
-            tvSomeoneIsSleeping.visibility = View.GONE
-            tvAddSomeEpisodes.visibility = View.GONE
+            hideViews()
 
         }
     }
 
-    private fun setEpisodes() {
-        adapter.clearAdapter()
-        for (episode in tvShow.listOfEpisodes) {
-            adapter.addEpisode(episode)
-            episodeList.add(episode)
-        }
+    private fun hideViews() {
+        ivSleepingPlaceHolder.visibility = View.GONE
+        tvDontWakeHimUp.visibility = View.GONE
+        tvSomeoneIsSleeping.visibility = View.GONE
+        tvAddSomeEpisodes.visibility = View.GONE
+    }
+
+    private fun showViews() {
+        ivSleepingPlaceHolder.visibility = View.VISIBLE
+        tvDontWakeHimUp.visibility = View.VISIBLE
+        tvSomeoneIsSleeping.visibility = View.VISIBLE
+        tvAddSomeEpisodes.visibility = View.VISIBLE
     }
 
     override fun onResume() {
-        checkEpisodeList()
         super.onResume()
+        checkEpisodeList()
     }
 
 

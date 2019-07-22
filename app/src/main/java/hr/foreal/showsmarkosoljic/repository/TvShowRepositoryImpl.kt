@@ -9,10 +9,10 @@ import hr.foreal.showsmarkosoljic.model.TvShow
 class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
 
 
-    private var tvShowList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
+    private var tvShowList: ArrayList<TvShow> = arrayListOf()
 
 
-    val theOffice = TvShow(
+    private val theOffice = TvShow(
         1,
         R.drawable.office_list_poster,
         R.drawable.the_affair_poster,
@@ -21,7 +21,7 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
         arrayListOf(),
         "A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium."
     )
-    val bigBang = TvShow(
+    private val bigBang = TvShow(
         2,
         R.drawable.bang_list_poster, R.drawable.bang_details_poster,
         "The Big Bang Theory",
@@ -29,7 +29,7 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
         arrayListOf(),
         "A woman who moves into an apartment across the hall from two brilliant but socially awkward physicists shows them how little they know about life outside of the laboratory."
     )
-    val janeTheVirgin = TvShow(
+    private val janeTheVirgin = TvShow(
         7,
         R.drawable.jane_list_poster, R.drawable.jane_details_poster,
         "Jane the Virgin",
@@ -38,7 +38,7 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
         "A young, devout Catholic woman discovers that she was accidentally artificially inseminated."
     )
 
-    val house = TvShow(
+    private val house = TvShow(
         3,
         R.drawable.house_list_poster, R.drawable.house_details_poster,
         "House M.D.",
@@ -46,7 +46,7 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
         arrayListOf(),
         "An antisocial maverick doctor who specializes in diagnostic medicine does whatever it takes to solve puzzling cases that come his way using his crack team of doctors and his wits."
     )
-    val sherlock = TvShow(
+    private val sherlock = TvShow(
         4,
         R.drawable.sherlock_list_poster, R.drawable.sherlock_details_poster,
         "Sherlock",
@@ -55,7 +55,7 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
         "A modern update finds the famous sleuth and his doctor partner solving crime in 21st century London."
     )
 
-    val itsAllwaysSunny = TvShow(
+    private val itsAllwaysSunny = TvShow(
         5,
         R.drawable.sunny_list_poster, R.drawable.sunny_details_poster,
         "Its allways sunny in Philadelphia",
@@ -65,31 +65,25 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
     );
 
 
-    override fun getAllShows(): MutableLiveData<ArrayList<TvShow>> {
-        tvShowList.value = arrayListOf(house, theOffice, janeTheVirgin, itsAllwaysSunny, sherlock, bigBang)
+    override fun getAllShows(): ArrayList<TvShow> {
+        tvShowList = arrayListOf(house, theOffice, janeTheVirgin, itsAllwaysSunny, sherlock, bigBang)
         return tvShowList
     }
 
     override fun addEpisode(showId: Int, episode: Episode) {
-        when (showId) {
-            theOffice.id -> theOffice.listOfEpisodes.add(episode)
-            bigBang.id -> bigBang.listOfEpisodes.add(episode)
-            janeTheVirgin.id -> janeTheVirgin.listOfEpisodes.add(episode)
-            house.id -> house.listOfEpisodes.add(episode)
-            sherlock.id -> sherlock.listOfEpisodes.add(episode)
-            itsAllwaysSunny.id -> itsAllwaysSunny.listOfEpisodes.add(episode)
+        for (ep in tvShowList) {
+            if (ep.id == showId) {
+                ep.listOfEpisodes.add(episode)
+            }
         }
     }
 
-    override fun getEpisodes(showId: Int): MutableLiveData<ArrayList<Episode>> {
-        val showEpisodes = MutableLiveData<ArrayList<Episode>>()
-        when (showId) {
-            theOffice.id -> showEpisodes.value = theOffice.listOfEpisodes
-            bigBang.id -> showEpisodes.value = bigBang.listOfEpisodes
-            janeTheVirgin.id -> showEpisodes.value = janeTheVirgin.listOfEpisodes
-            house.id -> showEpisodes.value = house.listOfEpisodes
-            sherlock.id -> showEpisodes.value = sherlock.listOfEpisodes
-            itsAllwaysSunny.id -> showEpisodes.value = itsAllwaysSunny.listOfEpisodes
+    override fun getEpisodes(showId: Int): ArrayList<Episode> {
+        val showEpisodes = arrayListOf<Episode>()
+        for (show in tvShowList) {
+            if (show.id == showId) {
+                showEpisodes.addAll(show.listOfEpisodes)
+            }
         }
         return showEpisodes
     }

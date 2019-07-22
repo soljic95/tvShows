@@ -1,10 +1,11 @@
 package hr.foreal.showsmarkosoljic.viewModel
 
 import android.content.Intent
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.rxbinding2.InitialValueObservable
 import hr.foreal.showsmarkosoljic.router.Router
-import hr.foreal.showsmarkosoljic.ui.login.LoginContract
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -14,12 +15,19 @@ class LoginViewModel(private val router: Router) : ViewModel() {
         val INTENT_KEY = "KEY"
     }
 
+
+    private val isEmailValid: MutableLiveData<Boolean> = MutableLiveData()
+    private val isPasswordValid: MutableLiveData<Boolean> = MutableLiveData()
     private val PASSWORD_LENGTH = 8
-    private lateinit var view: LoginContract.View
 
 
-    fun setView(view: LoginContract.View) {
-        this.view = view
+
+    fun isEmailValid(): LiveData<Boolean> {
+        return isEmailValid
+    }
+
+    fun isPasswordValid(): LiveData<Boolean> {
+        return isPasswordValid
     }
 
 
@@ -40,19 +48,11 @@ class LoginViewModel(private val router: Router) : ViewModel() {
     }
 
     private fun checkUsername(username: String) {
-        if (username.isEmpty()) {
-            view.onUserNameEmpty()
-        } else {
-            view.onUsernameValid()
-        }
+        isEmailValid.value = username.isNotEmpty()
     }
 
     private fun checkPassword(password: String) {
-        if (password.length < PASSWORD_LENGTH) {
-            view.onPasswordInvalid()
-        } else {
-            view.onPasswordValid()
-        }
+        isPasswordValid.value = password.length >= PASSWORD_LENGTH
 
     }
 

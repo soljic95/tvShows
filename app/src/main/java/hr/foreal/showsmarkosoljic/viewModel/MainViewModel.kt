@@ -15,24 +15,17 @@ class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
     val ONE_SECOND_DELAY: Long = 1000
 
     private var showList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
+    private var episodeList: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
     private var image: MutableLiveData<Bitmap> = MutableLiveData()
     private lateinit var router: Router
 
     fun observeShows(): LiveData<ArrayList<TvShow>> {
-        showList = repository.getAllShows()
+        showList.value = repository.getAllShows()
         return showList
     }
 
     fun setRouter(router: Router) {
         this.router = router
-    }
-
-    fun saveImage(bitmap: Bitmap) {
-        image.value = bitmap
-    }
-
-    fun getSavedImage(): LiveData<Bitmap> {
-        return image
     }
 
     fun listItemClicked(bundle: Bundle) {
@@ -41,7 +34,8 @@ class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
 
 
     fun observeShowEpisodes(showId: Int): LiveData<ArrayList<Episode>> {
-        return repository.getEpisodes(showId)
+        episodeList.value = repository.getEpisodes(showId)
+        return episodeList
     }
 
     fun showWelcomeFragment(userName: String) = router.showWelcomeScreen(userName)
@@ -67,10 +61,5 @@ class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
         router.showTvShowsListScreen()
 
     }
-
-    override fun onCleared() {
-        super.onCleared()
-    }
-
 
 }

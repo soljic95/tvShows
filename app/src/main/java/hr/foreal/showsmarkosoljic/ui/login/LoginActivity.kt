@@ -5,9 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
 import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.router.RouterImpl
@@ -15,17 +13,22 @@ import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : AppCompatActivity(), LoginContract.View {
-//Todo remove view, implement live data for observing
+class LoginActivity : AppCompatActivity(), LifecycleOwner {
+
 
     private lateinit var viewModel: LoginViewModel
     private var usernameValid = false
     private var passwordValid = false
+    private lateinit var lifecycleRegistry: LifecycleRegistry
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        lifecycleRegistry = LifecycleRegistry(this)
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+
         viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
@@ -34,7 +37,18 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
                 ) as T
             }
         })[LoginViewModel::class.java]
-        viewModel.setView(this)
+        viewModel.isEmailValid().observe(this, Observer {
+            when (it) {
+                true -> onUsernameValid()
+                false -> onUserNameEmpty()
+            }
+        })
+        viewModel.isPasswordValid().observe(this, Observer {
+            when (it) {
+                true -> onPasswordValid()
+                false -> onPasswordInvalid()
+            }
+        })
         btnLogin.setOnClickListener { onBtnLoginClicked() }
 
         etEpisodeName.doAfterTextChanged { userNameTextChanged() }
@@ -64,40 +78,47 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     }
 
+
     private fun userNameTextChanged() {
         viewModel.subscribeToUserNameObservable(etEpisodeName.textChanges())
-
     }
 
     private fun passwordTextChanged() {
         passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
         viewModel.subscribeToPasswordObservable(etPassword.textChanges())
-
     }
 
-    override fun onUserNameEmpty() {
+    private fun onUserNameEmpty() {
         usernameValid = false
         btnLogin.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.buttonDisabledPink))
     }
 
-    override fun onPasswordInvalid() {
+    private fun onPasswordInvalid() {
         passwordValid = false
         btnLogin.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.buttonDisabledPink))
     }
 
-    override fun onUsernameValid() {
+    private fun onUsernameValid() {
         usernameValid = true
         if (passwordValid) {
             btnLogin.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.buttonEnabledPink))
         }
     }
 
-    override fun onPasswordValid() {
+    private fun onPasswordValid() {
         passwordValid = true
         if (usernameValid) {
             btnLogin.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.buttonEnabledPink))
         }
+    }
 
+    override fun getLifecycle(): Lifecycle {
+        return lifecycleRegistry
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
 }

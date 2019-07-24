@@ -49,11 +49,11 @@ class RouterImpl(private val activity: Activity, private val fragmentManager: Fr
         }
     }
 
-    override fun showAddEpisodeScreen(tvShowName: String) {
+    override fun showAddEpisodeScreen(showId: Int) {
         fragmentManager.beginTransaction()
             .replace(
                 mainContainer,
-                AddEpisodeFragment.newInstance(tvShowName),
+                AddEpisodeFragment.newInstance(showId),
                 AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG
             )
             .addToBackStack(null)

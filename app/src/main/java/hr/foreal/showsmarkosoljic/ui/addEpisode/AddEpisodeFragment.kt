@@ -8,29 +8,27 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.model.Episode
-import hr.foreal.showsmarkosoljic.model.StaticEpisodes
-import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.choose_picture_layout.view.*
 import kotlinx.android.synthetic.main.fragment_add_episode.*
 import kotlinx.android.synthetic.main.number_picker_dialog_layout.view.*
 
-class AddEpisodeFragment() : BaseFragment() {
+class AddEpisodeFragment : Fragment() {
     companion object {
         @JvmStatic
-        fun newInstance(tvShowName: String): AddEpisodeFragment {
+        fun newInstance(showId: Int): AddEpisodeFragment {
             var fragment = AddEpisodeFragment()
-            fragment.setShowName(tvShowName)
+            fragment.setShowID(showId)
             return fragment
         }
 
         val ADD_EPISODE_FRAGMENT_TAG = "AddEpisode"
-
     }
 
     private val MINVALUE = 1
@@ -42,13 +40,12 @@ class AddEpisodeFragment() : BaseFragment() {
     private val EPISODE_KEY = "EPISODE_KEY"
     private val TVSHOW_KEY = "TVSHOW_KEY"
 
-
     private var seasonNumber: Int = 1
     private var episodeNumber: Int = 1
     private var bitmapImage: Bitmap? = null
 
-    private lateinit var showName: String
-    private lateinit var presenter: AddEpisodeContract.Presenter
+    private var showId: Int = 0
+    private lateinit var viewModel: MainViewModel
 
 
     override fun onCreateView(
@@ -60,6 +57,7 @@ class AddEpisodeFragment() : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         initToolbar()
         setEpisodeInfo(seasonNumber, episodeNumber)
         episodeImage.setOnClickListener { showPictureDialog() }
@@ -79,18 +77,10 @@ class AddEpisodeFragment() : BaseFragment() {
 
     }
 
-    private fun setShowName(tvShowName: String) {
-        showName = tvShowName
+    private fun setShowID(showId: Int) {
+        this.showId = showId
     }
 
-    override fun setPresenter() {
-        presenter = AddEpisodePresenter(RouterImpl(requireActivity(), requireFragmentManager()))
-    }
-
-    override fun getPresenter(): BasePresenter {
-
-        return presenter as BasePresenter
-    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
@@ -100,26 +90,17 @@ class AddEpisodeFragment() : BaseFragment() {
     }
 
     private fun initToolbar() {
-        toolbar2.setNavigationOnClickListener { presenter.onUpButtonClicked() }
+        toolbar2.setNavigationOnClickListener { backButtonClicked() }
     }
 
     private fun backButtonClicked() {
-        presenter.onUpButtonClicked()
+        viewModel.onUpButtonClicked()
     }
 
     private fun addEpisode(title: String, season: String, episode: String, description: String) {
         val episode = Episode(title, season, episode, description)
-        when (showName) {
-            "The Office" -> StaticEpisodes.theOffice.listOfEpisodes.add(episode) //todo ENUM?
-            "The Big Bang Theory" -> StaticEpisodes.bigBang.listOfEpisodes.add(episode)
-            "Jane the Virgin" -> StaticEpisodes.janeTheVirgin.listOfEpisodes.add(episode)
-            "House M.D." -> StaticEpisodes.house.listOfEpisodes.add(episode)
-            "Sherlock" -> StaticEpisodes.sherlock.listOfEpisodes.add(episode)
-            "Its allways sunny in Philadelphia" -> StaticEpisodes.itsAllwaysSunny.listOfEpisodes.add(episode)
-        }
-
-        presenter.onUpButtonClicked()
-
+        viewModel.addEpisode(showId, episode)
+        backButtonClicked()
     }
 
     private fun showPictureDialog() {
@@ -197,13 +178,12 @@ class AddEpisodeFragment() : BaseFragment() {
         tvUploadPhoto.visibility = View.INVISIBLE
     }
 
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (bitmapImage != null) outState.putParcelable(PICTURE_KEY, bitmapImage)
         outState.putInt(SEASON_KEY, seasonNumber)
         outState.putInt(EPISODE_KEY, episodeNumber)
-        outState.putString(TVSHOW_KEY, showName)
+        outState.putInt(TVSHOW_KEY, showId)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -216,7 +196,7 @@ class AddEpisodeFragment() : BaseFragment() {
             seasonNumber = savedInstanceState.getInt(SEASON_KEY)
             episodeNumber = savedInstanceState.getInt(EPISODE_KEY)
             setEpisodeInfo(seasonNumber, episodeNumber)
-            showName = savedInstanceState.getString(TVSHOW_KEY)
+            showId = savedInstanceState.getInt(TVSHOW_KEY)
         }
 
     }

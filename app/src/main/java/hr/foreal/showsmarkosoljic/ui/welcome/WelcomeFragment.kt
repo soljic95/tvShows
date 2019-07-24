@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
-import hr.foreal.showsmarkosoljic.router.RouterImpl
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_welcome.*
 
-class WelcomeFragment : BaseFragment(), WelcomeContract.View {
+class WelcomeFragment : Fragment(), WelcomeContract.View {
 
 
-    lateinit var presenter: WelcomeContract.Presenter
+    lateinit var viewModel: MainViewModel
 
     companion object {
         val BUNDLE_KEY = "BUNDLE_KEY"
@@ -37,22 +37,14 @@ class WelcomeFragment : BaseFragment(), WelcomeContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.setView(this)
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         setWelcomeText(arguments?.getString(BUNDLE_KEY))
         showTvShowsListScreen()
     }
 
-    override fun setPresenter() {
-        presenter = WelcomePresenter(RouterImpl(requireActivity(), requireFragmentManager()))
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
-    }
 
     private fun showTvShowsListScreen() {
-        presenter.init()
+        viewModel.init()
     }
 
     private fun setWelcomeText(userName: String?) {

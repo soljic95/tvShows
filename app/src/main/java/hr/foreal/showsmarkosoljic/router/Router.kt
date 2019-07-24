@@ -16,5 +16,5 @@ interface Router {
 
     fun goBack()
 
-    fun showAddEpisodeScreen(tvShowName : String)
+    fun showAddEpisodeScreen(showId : Int)
 }

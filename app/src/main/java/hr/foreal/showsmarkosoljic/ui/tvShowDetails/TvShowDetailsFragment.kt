@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseFragment
-import hr.foreal.showsmarkosoljic.base.BasePresenter
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
-import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_tv_show_details.*
-import javax.inject.Inject
 
 
-class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
+class TvShowDetailsFragment : Fragment() {
 
 
     companion object {
@@ -37,7 +37,7 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
 
-    lateinit var presenter: TvShowDetailsContract.Presenter
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,14 +48,16 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.setView(this)
-        setHasOptionsMenu(true)
+        viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         tvShow = arguments!!.getParcelable(TvShowsListFragment.TV_SHOW_BUNDLE_KEY)
         setToolbar()
         init()
         initRecyclerAdapter()
-        setEpisodes()
+        viewModel.observeShowEpisodes(tvShow.id).observe(this, Observer {
+            adapter.addEpisodes(it)
+            episodeList.addAll(it)
 
+        })
         fab.setOnClickListener {
             addEpisodes()
         }
@@ -65,22 +67,9 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     }
 
-    override fun setPresenter() {
-        presenter = TvShowDetailsPresenter(
-            RouterImpl(
-                requireActivity(), requireFragmentManager()
-            )
-        )
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
-    }
-
 
     private fun setToolbar() {
-        tvShowDetailToolbar.setNavigationOnClickListener { presenter.onUpButtonClicked() }
+        tvShowDetailToolbar.setNavigationOnClickListener { viewModel.onUpButtonClicked() }
         toolbar_image.setBackgroundResource(tvShow.showDetailsImageId)
 
     }
@@ -91,8 +80,9 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
 
     }
 
+
     private fun addEpisodes() {
-        presenter.fabClicked(tvShow.name)
+        viewModel.fabClicked(tvShow.id)
     }
 
 
@@ -104,39 +94,35 @@ class TvShowDetailsFragment : BaseFragment(), TvShowDetailsContract.View {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
-        if (episodeList.isNotEmpty()) {
-            for (ep in episodeList) {
-                adapter.addEpisode(ep)
-            }
-        }
+
     }
 
     private fun checkEpisodeList() {
         if (episodeList.isEmpty()) {
-            ivSleepingPlaceHolder.visibility = View.VISIBLE
-            tvDontWakeHimUp.visibility = View.VISIBLE
-            tvSomeoneIsSleeping.visibility = View.VISIBLE
-            tvAddSomeEpisodes.visibility = View.VISIBLE
+            showViews()
         } else {
-            ivSleepingPlaceHolder.visibility = View.GONE
-            tvDontWakeHimUp.visibility = View.GONE
-            tvSomeoneIsSleeping.visibility = View.GONE
-            tvAddSomeEpisodes.visibility = View.GONE
+            hideViews()
 
         }
     }
 
-    private fun setEpisodes() {
-        adapter.clearAdapter()
-        for (episode in tvShow.listOfEpisodes) {
-            adapter.addEpisode(episode)
-            episodeList.add(episode)
-        }
+    private fun hideViews() {
+        ivSleepingPlaceHolder.visibility = View.GONE
+        tvDontWakeHimUp.visibility = View.GONE
+        tvSomeoneIsSleeping.visibility = View.GONE
+        tvAddSomeEpisodes.visibility = View.GONE
+    }
+
+    private fun showViews() {
+        ivSleepingPlaceHolder.visibility = View.VISIBLE
+        tvDontWakeHimUp.visibility = View.VISIBLE
+        tvSomeoneIsSleeping.visibility = View.VISIBLE
+        tvAddSomeEpisodes.visibility = View.VISIBLE
     }
 
     override fun onResume() {
-        checkEpisodeList()
         super.onResume()
+        checkEpisodeList()
     }
 
 

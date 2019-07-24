@@ -13,20 +13,23 @@ import android.provider.MediaStore.Images
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import hr.foreal.showsmarkosoljic.R
-import hr.foreal.showsmarkosoljic.base.BaseActivity
-import hr.foreal.showsmarkosoljic.base.BasePresenter
+import hr.foreal.showsmarkosoljic.repository.TvShowRepositoryImpl
 import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment
-import hr.foreal.showsmarkosoljic.ui.login.LoginPresenter
+import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
+import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 
 
-class MainActivity : BaseActivity(), MainContract.View {
+class MainActivity : AppCompatActivity() {
 
-
-    lateinit var presenter: MainContract.Presenter
+    private lateinit var viewModel: MainViewModel
     val CAMERA_REQUEST_CODE = 10
     val GALLERY_REQUEST_CODE = 11
 
@@ -34,22 +37,20 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setPresenter()
-        presenter.setView(this)
+        viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(
+                    TvShowRepositoryImpl()
+                ) as T
+            }
+        })[MainViewModel::class.java]
+        viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager))
         if (savedInstanceState == null) {
-            presenter.showWelcomeFragment(intent.getStringExtra(LoginPresenter.INTENT_KEY))
+            viewModel.showWelcomeFragment(intent.getStringExtra(LoginViewModel.INTENT_KEY))
         }
 
 
-    }
-
-    override fun setPresenter() {
-        presenter = MainPresenter(RouterImpl(this, supportFragmentManager))
-    }
-
-
-    override fun getPresenter(): BasePresenter {
-        return presenter as BasePresenter
     }
 
 

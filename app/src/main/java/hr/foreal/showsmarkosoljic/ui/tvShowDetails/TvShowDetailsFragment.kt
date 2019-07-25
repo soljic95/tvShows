@@ -37,6 +37,7 @@ class TvShowDetailsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
 
+
     private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(

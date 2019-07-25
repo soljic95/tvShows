@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -23,8 +24,10 @@ import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.repository.TvShowRepositoryImpl
 import hr.foreal.showsmarkosoljic.router.RouterImpl
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment
+import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
 import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
 import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,11 +35,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     val CAMERA_REQUEST_CODE = 10
     val GALLERY_REQUEST_CODE = 11
+    var isTablet = false
+    var isLandscape = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        isTablet = resources.getBoolean(R.bool.isTablet)
+        isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 @Suppress("UNCHECKED_CAST")
@@ -45,12 +52,29 @@ class MainActivity : AppCompatActivity() {
                 ) as T
             }
         })[MainViewModel::class.java]
-        viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager))
+        viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager, isTablet, isLandscape))
+        checkOrientation()
         if (savedInstanceState == null) {
             viewModel.showWelcomeFragment(intent.getStringExtra(LoginViewModel.INTENT_KEY))
         }
 
 
+    }
+
+    private fun checkOrientation() {
+        if (isTablet && isLandscape) {
+            if (supportFragmentManager.findFragmentByTag("DETAIL_FRAGMENT") != null) {
+                supportFragmentManager.beginTransaction()
+                    .remove(supportFragmentManager.findFragmentByTag("DETAIL_FRAGMENT")!!)
+                    .replace(R.id.masterLayoutContainer, TvShowsListFragment.newInstance())
+                    .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.masterLayoutContainer, TvShowsListFragment.newInstance())
+                    .commit()
+            }
+
+        }
     }
 
 

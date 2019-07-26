@@ -28,7 +28,7 @@ class RouterImpl(
 
     override fun showWelcomeScreen(userName: String) {
         fragmentManager.beginTransaction()
-            .add(detailContainer, WelcomeFragment.newInstance(userName), "welcome")
+            .replace(detailContainer, WelcomeFragment.newInstance(userName), "welcome")
             .commit()
     }
 
@@ -54,7 +54,7 @@ class RouterImpl(
     override fun showTvShowDetailsScreen(bundle: Bundle) {
 
         fragmentManager.beginTransaction()
-            .add(detailContainer, TvShowDetailsFragment.newInstance(bundle), "DETAIL_FRAGMENT")
+            .replace(detailContainer, TvShowDetailsFragment.newInstance(bundle), "DETAIL_FRAGMENT")
             .addToBackStack(null)
             .commit()
     }
@@ -63,7 +63,7 @@ class RouterImpl(
     override fun showAddEpisodeScreen(showId: Int) {
 
         fragmentManager.beginTransaction()
-            .add(
+            .replace(
                 detailContainer,
                 AddEpisodeFragment.newInstance(showId),
                 AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG

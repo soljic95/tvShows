@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
                         showMessageOKCancel("You cannot use this feature without camera and external storage approval", //todo extract to resources
-                            DialogInterface.OnClickListener { dialog, which ->
+                            DialogInterface.OnClickListener { _, _ ->
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     requestCameraPermission()
                                 }

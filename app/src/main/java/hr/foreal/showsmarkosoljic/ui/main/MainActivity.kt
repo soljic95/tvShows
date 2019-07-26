@@ -44,37 +44,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         isTablet = resources.getBoolean(R.bool.isTablet)
         isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return MainViewModel(
-                    TvShowRepositoryImpl()
-                ) as T
-            }
-        })[MainViewModel::class.java]
-        viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager, isTablet, isLandscape))
-        checkOrientation()
+
         if (savedInstanceState == null) {
+            viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+                override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                    @Suppress("UNCHECKED_CAST")
+                    return MainViewModel(
+                        TvShowRepositoryImpl()
+                    ) as T
+                }
+            })[MainViewModel::class.java]
+            viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager))
             viewModel.showWelcomeFragment(intent.getStringExtra(LoginViewModel.INTENT_KEY))
+        } else {
+            viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+            viewModel.setRouter(RouterImpl(this@MainActivity, supportFragmentManager))
         }
 
 
-    }
-
-    private fun checkOrientation() {
-        if (isTablet && isLandscape) {
-            if (supportFragmentManager.findFragmentByTag("DETAIL_FRAGMENT") != null) {
-                supportFragmentManager.beginTransaction()
-                    .remove(supportFragmentManager.findFragmentByTag("DETAIL_FRAGMENT")!!)
-                    .replace(R.id.masterLayoutContainer, TvShowsListFragment.newInstance())
-                    .commit()
-            } else {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.masterLayoutContainer, TvShowsListFragment.newInstance())
-                    .commit()
-            }
-
-        }
     }
 
 

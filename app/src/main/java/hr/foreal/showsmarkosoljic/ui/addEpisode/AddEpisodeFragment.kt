@@ -63,7 +63,7 @@ class AddEpisodeFragment : Fragment() {
         episodeImage.setOnClickListener { showPictureDialog() }
         btnSave.setOnClickListener {
             addEpisode(
-                etEpisodeName.text.toString(),
+                etUsername.text.toString(),
                 tvSeason.text.toString(),
                 tvEpisode.text.toString(),
                 etEpisodeDescription.text.toString()

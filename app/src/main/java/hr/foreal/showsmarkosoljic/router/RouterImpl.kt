@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentManager
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.ui.addEpisode.AddEpisodeFragment
 import hr.foreal.showsmarkosoljic.ui.login.LoginActivity
+import hr.foreal.showsmarkosoljic.ui.login.LoginUserFragment
+import hr.foreal.showsmarkosoljic.ui.registerUser.RegisterUserFragment
 import hr.foreal.showsmarkosoljic.ui.tvShowDetails.TvShowDetailsFragment
 import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
 import hr.foreal.showsmarkosoljic.ui.welcome.WelcomeFragment
@@ -51,6 +53,13 @@ class RouterImpl(
 
     }
 
+    override fun showCreateAccount() {
+        fragmentManager.beginTransaction()
+            .replace(R.id.activityLoginLayout, RegisterUserFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun showTvShowDetailsScreen(bundle: Bundle) {
 
         fragmentManager.beginTransaction()
@@ -78,6 +87,12 @@ class RouterImpl(
             0 -> activity.finish()
             else -> fragmentManager.popBackStack()
         }
+    }
+
+    override fun showLoginFragment() {
+        fragmentManager.beginTransaction()
+            .replace(R.id.activityLoginLayout, LoginUserFragment.newInstance())
+            .commit()
     }
 
 

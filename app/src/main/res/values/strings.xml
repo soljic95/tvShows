@@ -18,4 +18,11 @@
     <string name="save">Save</string>
     <string name="season_format">S%s</string>
     <string name="episode_format">E%s</string>
+    <string name="remember_me">Remember me</string>
+    <string name="or">or</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="e_mail">e-mail</string>
+    <string name="password_again">Password again</string>
+    <string name="create_account">Create account</string>
+    <string name="loading">Loading...</string>
 </resources>

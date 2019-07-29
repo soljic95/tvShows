@@ -16,5 +16,10 @@ interface Router {
 
     fun goBack()
 
-    fun showAddEpisodeScreen(showId : Int)
+    fun showAddEpisodeScreen(showId: Int)
+
+    fun showLoginFragment()
+
+    fun showCreateAccount()
+
 }

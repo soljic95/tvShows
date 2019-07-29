@@ -11,10 +11,14 @@ import hr.foreal.showsmarkosoljic.ui.tvShowDetails.TvShowDetailsFragment
 import hr.foreal.showsmarkosoljic.ui.tvShowsList.TvShowsListFragment
 import hr.foreal.showsmarkosoljic.ui.welcome.WelcomeFragment
 
-class RouterImpl(private val activity: Activity, private val fragmentManager: FragmentManager) : Router {
+class RouterImpl(
+    private val activity: Activity,
+    private val fragmentManager: FragmentManager
+) : Router {
 
 
-    private val mainContainer = R.id.activity_main_container
+    private val masterContainer = R.id.masterLayoutContainer
+    private val detailContainer = R.id.detailLayoutContainer
 
 
     override fun showMainScreen(intent: Intent) {
@@ -24,22 +28,49 @@ class RouterImpl(private val activity: Activity, private val fragmentManager: Fr
 
     override fun showWelcomeScreen(userName: String) {
         fragmentManager.beginTransaction()
-            .replace(mainContainer, WelcomeFragment.newInstance(userName))
+            .replace(detailContainer, WelcomeFragment.newInstance(userName), "welcome")
             .commit()
     }
 
 
     override fun showTvShowsListScreen() {
-        fragmentManager.beginTransaction()
-            .replace(mainContainer, TvShowsListFragment.newInstance())
-            .commit()
+        fragmentManager.popBackStack()
+        if (fragmentManager.findFragmentByTag("welcome") != null) {
+            fragmentManager.beginTransaction()
+                .remove(fragmentManager.findFragmentByTag("welcome")!!)
+                .replace(masterContainer, TvShowsListFragment.newInstance(), "list")
+                .addToBackStack(null)
+                .commit()
+        } else {
+            fragmentManager.beginTransaction()
+                .replace(masterContainer, TvShowsListFragment.newInstance(), "list")
+                .addToBackStack(null)
+                .commit()
+        }
+
+
     }
 
     override fun showTvShowDetailsScreen(bundle: Bundle) {
+
         fragmentManager.beginTransaction()
-            .replace(mainContainer, TvShowDetailsFragment.newInstance(bundle), "DETAIL_FRAGMENT")
+            .replace(detailContainer, TvShowDetailsFragment.newInstance(bundle), "DETAIL_FRAGMENT")
             .addToBackStack(null)
             .commit()
+    }
+
+
+    override fun showAddEpisodeScreen(showId: Int) {
+
+        fragmentManager.beginTransaction()
+            .replace(
+                detailContainer,
+                AddEpisodeFragment.newInstance(showId),
+                AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG
+            )
+            .addToBackStack(null)
+            .commit()
+
     }
 
     override fun goBack() {
@@ -49,15 +80,5 @@ class RouterImpl(private val activity: Activity, private val fragmentManager: Fr
         }
     }
 
-    override fun showAddEpisodeScreen(showId: Int) {
-        fragmentManager.beginTransaction()
-            .replace(
-                mainContainer,
-                AddEpisodeFragment.newInstance(showId),
-                AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG
-            )
-            .addToBackStack(null)
-            .commit()
-    }
 
 }

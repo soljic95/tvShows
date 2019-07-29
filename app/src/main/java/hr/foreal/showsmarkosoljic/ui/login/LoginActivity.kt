@@ -29,14 +29,7 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
 
-        viewModel = ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return LoginViewModel(
-                    RouterImpl(this@LoginActivity, supportFragmentManager)
-                ) as T
-            }
-        })[LoginViewModel::class.java]
+        viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         viewModel.isEmailValid().observe(this, Observer {
             when (it) {
                 true -> onUsernameValid()
@@ -44,9 +37,10 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
             }
         })
         viewModel.isPasswordValid().observe(this, Observer {
-            when (it) {
-                true -> onPasswordValid()
-                false -> onPasswordInvalid()
+            if (it) {
+                onPasswordValid()
+            } else {
+                onPasswordInvalid()
             }
         })
         btnLogin.setOnClickListener { onBtnLoginClicked() }
@@ -63,7 +57,7 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
             passwordEtInputLayout.isPasswordVisibilityToggleEnabled = true
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra(LoginViewModel.INTENT_KEY, etEpisodeName.text.toString())
-            viewModel.login(intent)
+            showMainScreen(intent)
         } else {
             if (!usernameValid) {
                 etEpisodeName.error = "Username cant be empty"
@@ -119,6 +113,13 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
     override fun onStart() {
         super.onStart()
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
+    }
+
+    //navigation
+
+    private fun showMainScreen(intent: Intent) {
+        startActivity(intent)
+        finish()
     }
 
 }

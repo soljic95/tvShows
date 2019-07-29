@@ -1,6 +1,5 @@
 package hr.foreal.showsmarkosoljic.viewModel
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,7 @@ import hr.foreal.showsmarkosoljic.router.Router
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class LoginViewModel(private val router: Router) : ViewModel() {
+class LoginViewModel : ViewModel() {
     companion object {
         @JvmStatic
         val INTENT_KEY = "KEY"
@@ -19,7 +18,6 @@ class LoginViewModel(private val router: Router) : ViewModel() {
     private val isEmailValid: MutableLiveData<Boolean> = MutableLiveData()
     private val isPasswordValid: MutableLiveData<Boolean> = MutableLiveData()
     private val PASSWORD_LENGTH = 8
-
 
 
     fun isEmailValid(): LiveData<Boolean> {
@@ -53,12 +51,6 @@ class LoginViewModel(private val router: Router) : ViewModel() {
 
     private fun checkPassword(password: String) {
         isPasswordValid.value = password.length >= PASSWORD_LENGTH
-
-    }
-
-    fun login(intent: Intent) {
-
-        router.showMainScreen(intent)
 
     }
 

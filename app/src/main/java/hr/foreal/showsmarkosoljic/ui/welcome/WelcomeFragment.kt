@@ -39,6 +39,8 @@ class WelcomeFragment : Fragment(), WelcomeContract.View {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
         setWelcomeText(arguments?.getString(BUNDLE_KEY))
+
+
         showTvShowsListScreen()
     }
 

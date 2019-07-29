@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/tvShowsDetailLayout"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@android:color/white"
+                                                   tools:context=".ui.tvShowDetails.TvShowDetailsFragment">
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:fillViewport="true"
+                android:scrollbars="none"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/tvShowName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="The Office"
+                        android:textColor="#2e2e2e"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.026"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                        android:id="@+id/tvShowDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus id ante at rutrum. Fusce sodales quam dui, in pellentesque ligula accumsan et. Pellentesque lobortis ultrices magna, at dignissim enim cursus a. Morbi eget nunc rhoncus, interdum mauris ornare, pretium turpis. Nunc at nulla ipsum. Morbi eget massa eget erat porta gravida ac et sem."
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvShowName"/>
+
+
+                <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="28dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="Episodes"
+                        android:textColor="#2e2e2e"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+
+                        app:layout_anchorGravity="start|center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvShowDescription"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/episodesRecyclerView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:padding="16dp"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/ic_add"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/textView3"/>
+
+
+                <ImageView
+                        android:id="@+id/ivSleepingPlaceHolder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="48dp"
+                        android:src="@drawable/ic_img_placeholder_episodes"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.498"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+
+                <TextView
+                        android:id="@+id/tvSomeoneIsSleeping"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/someone_has_fallen_asleep"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="@+id/ivSleepingPlaceHolder"
+                        app:layout_constraintStart_toStartOf="@+id/ivSleepingPlaceHolder"
+                        app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder"/>
+
+                <TextView
+                        android:id="@+id/tvDontWakeHimUp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="44dp"
+                        android:text="@string/don_t_wake_him_up"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tvSomeoneIsSleeping"
+                        app:layout_constraintStart_toStartOf="@+id/tvSomeoneIsSleeping"
+                        app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder"/>
+
+                <TextView
+                        android:id="@+id/tvAddSomeEpisodes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="68dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:text="Add some episodes "
+                        android:textColor="@color/buttonEnabledPink"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tvDontWakeHimUp"
+                        app:layout_constraintStart_toStartOf="@+id/tvDontWakeHimUp"
+                        app:layout_constraintTop_toBottomOf="@+id/ivSleepingPlaceHolder"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/MyCustomAppTheme"
+                app:elevation="0dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:contentScrim="@android:color/white"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                <ImageView
+                        android:id="@+id/toolbar_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"
+                        />
+
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/tvShowDetailToolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?actionBarSize"
+                        android:background="@drawable/toolbar_gradient"
+                        app:layout_collapseMode="pin"
+                >
+
+
+                </androidx.appcompat.widget.Toolbar>
+
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

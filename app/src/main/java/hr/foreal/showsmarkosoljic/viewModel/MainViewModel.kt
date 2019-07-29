@@ -62,4 +62,8 @@ class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
 
     }
 
+    fun displayShowList() {
+        router.showTvShowsListScreen()
+    }
+
 }

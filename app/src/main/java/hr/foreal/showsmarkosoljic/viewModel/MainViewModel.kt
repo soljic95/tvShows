@@ -1,6 +1,5 @@
 package hr.foreal.showsmarkosoljic.viewModel
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import androidx.lifecycle.LiveData
@@ -16,7 +15,6 @@ class MainViewModel(private val repository: TvShowRepository) : ViewModel() {
 
     private var showList: MutableLiveData<ArrayList<TvShow>> = MutableLiveData()
     private var episodeList: MutableLiveData<ArrayList<Episode>> = MutableLiveData()
-    private var image: MutableLiveData<Bitmap> = MutableLiveData()
     private lateinit var router: Router
 
     fun observeShows(): LiveData<ArrayList<TvShow>> {

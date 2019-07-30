@@ -14,6 +14,7 @@ import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
 import hr.foreal.showsmarkosoljic.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.fragment_register_user.*
 
 class LoginActivity : AppCompatActivity(), LifecycleOwner {
 
@@ -44,6 +45,14 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
             viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
             viewModel.setRouter(RouterImpl(this@LoginActivity, supportFragmentManager))
         }
+
+        //da ne stavljamo intent preko viewModela
+        viewModel.getLoginUserResponse().observe(this, Observer {
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            intent.putExtra(LoginViewModel.INTENT_KEY, it.tokenData.userToken)
+            startActivity(intent)
+            finish()
+        })
 
 
     }

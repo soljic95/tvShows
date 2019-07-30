@@ -3,10 +3,7 @@ package hr.foreal.showsmarkosoljic.repository
 import androidx.lifecycle.LiveData
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
-import hr.foreal.showsmarkosoljic.networkModels.RegisterUserResponse
-import hr.foreal.showsmarkosoljic.networkModels.UserInfoResponse
-import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
-import hr.foreal.showsmarkosoljic.networkModels.UserTokenInfo
+import hr.foreal.showsmarkosoljic.networkModels.*
 
 interface TvShowRepository {
 
@@ -16,12 +13,13 @@ interface TvShowRepository {
 
     fun getEpisodes(showId: Int): ArrayList<Episode>
 
-    fun createNewAccount(loginModel: UserLoginModel)
+    fun createAccount(loginModel: UserLoginModel)
 
-    fun getRegisterUserResponse(): LiveData<RegisterUserResponse>?
+    fun observeRegisterUserResponse(): LiveData<RegisterUserResponse>
 
-    fun loginUser(loginModel: UserLoginModel): LiveData<UserTokenInfo>
+    fun login(loginModel: UserLoginModel)
 
+    fun observeLoginResponseData(): LiveData<TokenData>
 
 
 }

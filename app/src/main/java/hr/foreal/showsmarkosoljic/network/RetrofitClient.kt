@@ -18,9 +18,9 @@ object RetrofitClient {
                 var client = OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor).build()
 
                 retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
                     .addConverterFactory(MoshiConverterFactory.create())
+                    .client(client)
+                    .baseUrl(BASE_URL)
                     .build()
 
             }

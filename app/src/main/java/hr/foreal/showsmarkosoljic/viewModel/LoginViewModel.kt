@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.rxbinding2.InitialValueObservable
+import hr.foreal.showsmarkosoljic.networkModels.RegisterUserResponse
+import hr.foreal.showsmarkosoljic.networkModels.TokenData
 import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
 import hr.foreal.showsmarkosoljic.repository.TvShowRepository
 import hr.foreal.showsmarkosoljic.router.Router
@@ -18,87 +20,56 @@ class LoginViewModel(private val repository: TvShowRepository) : ViewModel() {
     }
 
 
-    private val isEmailValid: MutableLiveData<Boolean> = MutableLiveData()
-    private val isPasswordValid: MutableLiveData<Boolean> = MutableLiveData()
-    private var registerUserResponse: MutableLiveData<String> = MutableLiveData()
-    private var token: MutableLiveData<String> = MutableLiveData()
-    private val PASSWORD_LENGTH = 8
     private lateinit var router: Router
+    private var registerUserResponse: MutableLiveData<RegisterUserResponse> = MutableLiveData()
+    private var loginUserResponse: MutableLiveData<TokenData> = MutableLiveData()
 
 
     fun setRouter(router: Router) {
         this.router = router
     }
 
-    fun isEmailValid(): LiveData<Boolean> {
-        return isEmailValid
-    }
-
-    fun isPasswordValid(): LiveData<Boolean> {
-        return isPasswordValid
-    }
-
     fun showLoginFragment() {
         router.showLoginFragment()
-    }
-
-    fun showMainScreen(intent: Intent) {
-        router.showMainScreen(intent)
-    }
-
-    fun subscribeToUserNameObservable(observable: InitialValueObservable<CharSequence>) {
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                checkUsername(it.toString())
-            }
-    }
-
-    fun subscribeToPasswordObservable(observable: InitialValueObservable<CharSequence>) {
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                checkPassword(it.toString())
-            }
     }
 
     fun onUpButtonClicked() {
         router.goBack()
     }
 
-    private fun checkUsername(username: String) {
-        isEmailValid.value = username.isNotEmpty()
-    }
-
-    private fun checkPassword(password: String) {
-        isPasswordValid.value = password.length >= PASSWORD_LENGTH
-
-    }
-
     fun showCreateAccount() {
         router.showCreateAccount()
     }
 
-    fun createNewAccount(loginModel: UserLoginModel) {
-        repository.createNewAccount(loginModel)
+    fun createAccount(email: String, password: String) {
+        observeRegisterUserResponseInRepo()
+        observeLoginUserResponseInRepo()
+        repository.createAccount(UserLoginModel(email, password))
     }
 
-    fun observeRegisterResponse(): LiveData<String> {
-        repository.getRegisterUserResponse()?.observeForever {
-            if (it != null) {
-                registerUserResponse.value = it.data.id
-            }
+    fun login(email: String, password: String) {
+        observeLoginUserResponseInRepo()
+        repository.login(UserLoginModel(email, password))
+    }
+
+    private fun observeRegisterUserResponseInRepo() {
+        repository.observeRegisterUserResponse().observeForever {
+            registerUserResponse.value = it
         }
+    }
+
+    fun getRegisterUserResponse(): LiveData<RegisterUserResponse> {
         return registerUserResponse
     }
 
-    fun observeToken(loginModel: UserLoginModel): LiveData<String> {
-        repository.loginUser(loginModel)?.observeForever {
-            if (it != null) {
-                token.value = it.token
-            }
+    fun getLoginUserResponse(): LiveData<TokenData> {
+        return loginUserResponse
+    }
+
+    private fun observeLoginUserResponseInRepo() {
+        repository.observeLoginResponseData().observeForever {
+            loginUserResponse.value = it
         }
-        return token
     }
 
 

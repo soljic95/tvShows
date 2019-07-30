@@ -3,6 +3,7 @@ package hr.foreal.showsmarkosoljic.ui.registerUser
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -42,34 +43,17 @@ class RegisterUserFragment : Fragment() {
         viewModel = ViewModelProviders.of(requireActivity()).get(LoginViewModel::class.java)
         initToolbar()
 
-        btnCreateAccount.setOnClickListener { createAccount() }
+
+        btnCreateAccount.setOnClickListener {
+            onCreateAccBtnClicked(
+                etEmail.text.toString(),
+                etPasswordSecond.text.toString()
+            )
+        }
 
 
     }
 
-    private fun createAccount() {
-        observeRegResponse()
-        var loginModel = UserLoginModel(etEmail.text.toString(), etPasswordSecond.text.toString())
-        alertDialog = AlertDialog.Builder(requireContext())
-            .setView(R.layout.progress_dialog)
-            .setCancelable(false)
-            .create()
-        alertDialog.show()
-        viewModel.createNewAccount(loginModel)
-
-    }
-
-    private fun observeRegResponse() {
-        viewModel.observeRegisterResponse().observe(this, Observer {
-            if (it != null) {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                alertDialog.dismiss()
-            } else {
-                Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
-                alertDialog.dismiss()
-            }
-        })
-    }
 
     private fun initToolbar() {
         toolbar.setNavigationOnClickListener { backButtonClicked() }
@@ -86,50 +70,27 @@ class RegisterUserFragment : Fragment() {
         viewModel.onUpButtonClicked()
     }
 
+    private fun onCreateAccBtnClicked(email: String, password: String) {
+        alertDialog = AlertDialog.Builder(requireContext())
+            .setView(R.layout.progress_dialog)
+            .create()
+
+        alertDialog.show()
+
+        viewModel.createAccount(email, password)
+
+
+        viewModel.getRegisterUserResponse().observe(this, Observer {
+            if (it != null) {
+                Log.d("marko", "the response is nut null, its this : ${it.data.email} ")
+            } else {
+                alertDialog.dismiss()
+                Log.d("marko", "something went wrong and the response is null")
+            }
+        })
+    }
+
 
 }
 
 
-/*
-
-api?.registerUser(loginModel)
-?.enqueue(object : Callback<UserInfoResponse> {
-    override fun onResponse(
-        call: Call<UserInfoResponse>,
-        registerUserResponse: Response<UserInfoResponse>
-    ) {
-        if (registerUserResponse.isSuccessful && registerUserResponse.body() != null) {
-            Toast.makeText(requireContext(), registerUserResponse.body()?.id, Toast.LENGTH_SHORT)
-                .show()
-            api?.loginUser(loginModel)?.enqueue(object : Callback<UserTokenInfo> {
-
-                override fun onResponse(
-                    call: Call<UserTokenInfo>,
-                    response: Response<UserTokenInfo>
-                ) {
-                    if (response.isSuccessful && response.body() != null) {
-                        val intent = Intent(requireActivity(), MainActivity::class.java)
-                        intent.putExtra(LoginViewModel.INTENT_KEY, etEmail.text.toString())
-                        RegisterUserFragment.viewModel.showMainScreen(intent)
-                        alertDialog.dismiss()
-                    }
-
-                }
-
-                override fun onFailure(call: Call<UserTokenInfo>, t: Throwable) {
-
-                }
-
-
-            })
-        }
-
-    }
-
-    override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
-        Toast.makeText(requireContext(), t.localizedMessage, Toast.LENGTH_SHORT)
-    }
-
-
-})
-*/

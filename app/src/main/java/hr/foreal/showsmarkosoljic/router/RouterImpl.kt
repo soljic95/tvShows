@@ -41,16 +41,12 @@ class RouterImpl(
             fragmentManager.beginTransaction()
                 .remove(fragmentManager.findFragmentByTag("welcome")!!)
                 .replace(masterContainer, TvShowsListFragment.newInstance(), "list")
-                .addToBackStack(null)
                 .commit()
         } else {
             fragmentManager.beginTransaction()
                 .replace(masterContainer, TvShowsListFragment.newInstance(), "list")
-                .addToBackStack(null)
                 .commit()
         }
-
-
     }
 
     override fun showCreateAccount() {

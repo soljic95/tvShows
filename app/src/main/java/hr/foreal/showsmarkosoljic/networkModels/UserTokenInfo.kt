@@ -1,8 +1,10 @@
 package hr.foreal.showsmarkosoljic.networkModels
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-data class UserTokenInfo(
-    @Json(name = "id")
-    val token: String
+@JsonClass(generateAdapter = true)
+class UserTokenInfo(
+    @Json(name = "token")
+    val userToken: String
 )

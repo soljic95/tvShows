@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -54,9 +55,13 @@ class LoginUserFragment : Fragment() {
 
     private fun observeLogin() {
         viewModel.getLoginUserResponse().observe(this, Observer {
-            if (alertDialog.isShowing) {
-                alertDialog.dismiss()
+            if (it != null) {
+                if (it.tokenData.userToken == "null") {
+                    alertDialog.dismiss()
+                    Toast.makeText(requireContext(), "This combination does not exist", Toast.LENGTH_SHORT).show()
+                }
             }
+
         })
     }
 

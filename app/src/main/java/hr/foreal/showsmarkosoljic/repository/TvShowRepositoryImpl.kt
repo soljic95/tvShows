@@ -8,9 +8,7 @@ import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
 import hr.foreal.showsmarkosoljic.network.IsaApi
 import hr.foreal.showsmarkosoljic.network.RetrofitClient
-import hr.foreal.showsmarkosoljic.networkModels.RegisterUserResponse
-import hr.foreal.showsmarkosoljic.networkModels.TokenData
-import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
+import hr.foreal.showsmarkosoljic.networkModels.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -111,13 +109,12 @@ class TvShowRepositoryImpl : TvShowRepository {
                 if (call.isExecuted && response.isSuccessful && response.body() != null) {
                     registerResponse.value = response.body()
                     login(loginModel)
-                    Log.d("marko", "register response recived")
                 }
             }
 
             override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
                 Log.d("marko", "an error happend on register : ${t.localizedMessage}")
-                registerResponse.value = null
+                registerResponse.value = RegisterUserResponse(UserInfoResponse("null", "null", "null"))
             }
         })
     }
@@ -127,14 +124,13 @@ class TvShowRepositoryImpl : TvShowRepository {
             override fun onResponse(call: Call<TokenData>, response: Response<TokenData>) {
                 if (call.isExecuted && response.isSuccessful && response.body() != null) {
                     tokenData.value = response.body()
-                    Log.d("marko", "token data recived ${response.body()?.tokenData}")
                 }
             }
 
 
             override fun onFailure(call: Call<TokenData>, t: Throwable) {
                 Log.d("marko", "an error happend on register : ${t.localizedMessage}")
-                tokenData.value = null
+                tokenData.value = TokenData(UserTokenInfo("null"))
             }
         })
     }

@@ -3,6 +3,7 @@ package hr.foreal.showsmarkosoljic.ui.login
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.*
@@ -48,10 +49,17 @@ class LoginActivity : AppCompatActivity(), LifecycleOwner {
 
         //da ne stavljamo intent preko viewModela
         viewModel.getLoginUserResponse().observe(this, Observer {
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            intent.putExtra(LoginViewModel.INTENT_KEY, it.tokenData.userToken)
-            startActivity(intent)
-            finish()
+            if(it !=null){
+                if (it.tokenData.userToken == "null") {
+                    Toast.makeText(this, "This combination does not exist", Toast.LENGTH_SHORT).show()
+                }else {
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.putExtra(LoginViewModel.INTENT_KEY, it.tokenData.userToken)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
         })
 
 

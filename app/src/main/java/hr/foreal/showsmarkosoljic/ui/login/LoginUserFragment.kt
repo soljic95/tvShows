@@ -12,12 +12,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.rxbinding2.widget.textChanges
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.network.IsaApi
 import hr.foreal.showsmarkosoljic.network.RetrofitClient
-import hr.foreal.showsmarkosoljic.networkModels.ApiLoginUserResponse
+import hr.foreal.showsmarkosoljic.networkModels.UserTokenInfo
 import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
 import hr.foreal.showsmarkosoljic.ui.main.MainActivity
 import hr.foreal.showsmarkosoljic.viewModel.LoginViewModel
@@ -38,6 +39,7 @@ class LoginUserFragment : Fragment() {
     private lateinit var viewModel: LoginViewModel
     private var usernameValid = false
     private var passwordValid = false
+    private lateinit var alertDialog: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -133,29 +135,28 @@ class LoginUserFragment : Fragment() {
 
 
     private fun login() {
-        val alertDialog = AlertDialog.Builder(requireContext())
+        observeToken()
+        alertDialog = AlertDialog.Builder(requireContext())
             .setView(R.layout.progress_dialog)
             .create()
         alertDialog.show()
-        val api = RetrofitClient.retrofitInstance?.create(IsaApi::class.java)
-        api?.loginUser(UserLoginModel(etUsername.text.toString(), etPassword.text.toString()))?.enqueue(object :
-            Callback<ApiLoginUserResponse> {
-            override fun onResponse(call: Call<ApiLoginUserResponse>, response: Response<ApiLoginUserResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    Toast.makeText(requireContext(), response.body()?.token, Toast.LENGTH_SHORT).show()
-                    alertDialog.dismiss()
-                    val intent =Intent(requireActivity(), MainActivity::class.java)
-                        intent.putExtra(LoginViewModel.INTENT_KEY, etUsername.text.toString())
+
+    }
+
+    private fun observeToken() {
+        viewModel.observeToken(UserLoginModel(etUsername.text.toString(), etPassword.text.toString()))
+            .observe(this, Observer {
+                if (it != null) {
+                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                    intent.putExtra(LoginViewModel.INTENT_KEY, it)
                     showMainScreen(intent)
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    alertDialog.dismiss()
+                } else {
+                    alertDialog.dismiss()
+                    Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
-            }
-
-            override fun onFailure(call: Call<ApiLoginUserResponse>, t: Throwable) {
-                Log.d("marko",t.localizedMessage)
-            alertDialog.dismiss()
-            }
-
-        })
+            })
     }
 
     private fun showMainScreen(intent: Intent) {

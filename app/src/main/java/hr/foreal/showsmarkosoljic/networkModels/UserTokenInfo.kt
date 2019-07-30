@@ -2,7 +2,7 @@ package hr.foreal.showsmarkosoljic.networkModels
 
 import com.squareup.moshi.Json
 
-data class ApiLoginUserResponse(
-    @Json(name = "token")
+data class UserTokenInfo(
+    @Json(name = "id")
     val token: String
 )

@@ -1,19 +1,18 @@
 package hr.foreal.showsmarkosoljic.network
 
-import hr.foreal.showsmarkosoljic.networkModels.ApiLoginUserResponse
-import hr.foreal.showsmarkosoljic.networkModels.ApiRegisterUserResponse
+import hr.foreal.showsmarkosoljic.networkModels.RegisterUserResponse
 import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
+import hr.foreal.showsmarkosoljic.networkModels.UserTokenInfo
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface IsaApi {
 
     @POST("users")
-    fun registerUser(@Body loginModel: UserLoginModel): Call<ApiRegisterUserResponse>
+    fun registerUser(@Body loginModel: UserLoginModel): Call<RegisterUserResponse>
 
     @POST("users/sessions")
-    fun loginUser(@Body loginModel: UserLoginModel): Call<ApiLoginUserResponse>
+    fun loginUser(@Body loginModel: UserLoginModel): Call<UserTokenInfo>
 
 
 }

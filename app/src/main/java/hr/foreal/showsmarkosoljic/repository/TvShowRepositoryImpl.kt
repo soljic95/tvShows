@@ -1,15 +1,35 @@
 package hr.foreal.showsmarkosoljic.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import hr.foreal.showsmarkosoljic.R
 import hr.foreal.showsmarkosoljic.model.Episode
 import hr.foreal.showsmarkosoljic.model.TvShow
+import hr.foreal.showsmarkosoljic.network.IsaApi
+import hr.foreal.showsmarkosoljic.network.RetrofitClient
+import hr.foreal.showsmarkosoljic.networkModels.RegisterUserResponse
+import hr.foreal.showsmarkosoljic.networkModels.UserInfoResponse
+import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
+import hr.foreal.showsmarkosoljic.networkModels.UserTokenInfo
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
+class TvShowRepositoryImpl : TvShowRepository {
+
+    // i repo i baza
 
 
     private var tvShowList: ArrayList<TvShow> = arrayListOf()
+    private var registerResponse: MutableLiveData<RegisterUserResponse> = MutableLiveData()
+    private var token: MutableLiveData<UserTokenInfo> = MutableLiveData()
+    private var api: IsaApi? = null
+
+    init {
+        api = RetrofitClient.retrofitInstance?.create(IsaApi::class.java)
+
+    }
 
 
     private val theOffice = TvShow(
@@ -86,5 +106,58 @@ class TvShowRepositoryImpl : TvShowRepository {// i repo i baza
             }
         }
         return showEpisodes
+    }
+
+    override fun createNewAccount(loginModel: UserLoginModel) {
+        api?.registerUser(loginModel)
+            ?.enqueue(object : Callback<RegisterUserResponse> {
+
+                override fun onResponse(
+                    call: Call<RegisterUserResponse>,
+                    registerUserResponse: Response<RegisterUserResponse>
+                ) {
+                    if (registerUserResponse.isSuccessful && registerUserResponse.body() != null) {
+                        //Log.d("marko", registerUserResponse.body()?.id)
+                        registerResponse.value = registerUserResponse.body()
+                        loginUser(loginModel)
+
+
+                    }
+
+                }
+
+                override fun onFailure(call: Call<RegisterUserResponse>, t: Throwable) {
+                    Log.d("marko", t.localizedMessage)
+                }
+
+            })
+    }
+
+    override fun getRegisterUserResponse(): LiveData<RegisterUserResponse> {
+        registerResponse?.observeForever { t: RegisterUserResponse? ->
+            // Log.d("marko", t?.data?.id)
+            registerResponse.value = t
+
+        }
+        return registerResponse
+    }
+
+    override fun loginUser(loginModel: UserLoginModel): LiveData<UserTokenInfo> {
+        api?.loginUser(loginModel)?.enqueue(object : Callback<UserTokenInfo> {
+
+            override fun onResponse(call: Call<UserTokenInfo>, response: Response<UserTokenInfo>) {
+                if (response.isSuccessful && response.body() != null) {
+                    token.value = response.body()
+                }
+            }
+
+
+            override fun onFailure(call: Call<UserTokenInfo>, t: Throwable) {
+                Log.d("marko", t.localizedMessage)
+            }
+
+
+        })
+        return token
     }
 }

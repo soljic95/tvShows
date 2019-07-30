@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.rxbinding2.InitialValueObservable
+import hr.foreal.showsmarkosoljic.networkModels.UserLoginModel
 import hr.foreal.showsmarkosoljic.repository.TvShowRepository
 import hr.foreal.showsmarkosoljic.router.Router
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,6 +20,8 @@ class LoginViewModel(private val repository: TvShowRepository) : ViewModel() {
 
     private val isEmailValid: MutableLiveData<Boolean> = MutableLiveData()
     private val isPasswordValid: MutableLiveData<Boolean> = MutableLiveData()
+    private var registerUserResponse: MutableLiveData<String> = MutableLiveData()
+    private var token: MutableLiveData<String> = MutableLiveData()
     private val PASSWORD_LENGTH = 8
     private lateinit var router: Router
 
@@ -74,6 +77,28 @@ class LoginViewModel(private val repository: TvShowRepository) : ViewModel() {
 
     fun showCreateAccount() {
         router.showCreateAccount()
+    }
+
+    fun createNewAccount(loginModel: UserLoginModel) {
+        repository.createNewAccount(loginModel)
+    }
+
+    fun observeRegisterResponse(): LiveData<String> {
+        repository.getRegisterUserResponse()?.observeForever {
+            if (it != null) {
+                registerUserResponse.value = it.data.id
+            }
+        }
+        return registerUserResponse
+    }
+
+    fun observeToken(loginModel: UserLoginModel): LiveData<String> {
+        repository.loginUser(loginModel)?.observeForever {
+            if (it != null) {
+                token.value = it.token
+            }
+        }
+        return token
     }
 
 

@@ -144,8 +144,6 @@ class AddEpisodeFragment : Fragment() {
             numberPickerDialog.dismiss()
 
         }
-
-
     }
 
 

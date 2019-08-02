@@ -165,9 +165,8 @@ class MainActivity : AppCompatActivity() {
             (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment)
                 .setImage(data.extras?.get("data") as Bitmap)
             Log.d("marko", "$requestCode")
+
         } else if (resultCode == Activity.RESULT_OK && data != null && requestCode == GALLERY_REQUEST_CODE) {
-
-
             (supportFragmentManager.findFragmentByTag(AddEpisodeFragment.ADD_EPISODE_FRAGMENT_TAG) as AddEpisodeFragment)
                 .setImage(Images.Media.getBitmap(this.contentResolver, data.data))
             Log.d("marko", "$requestCode")
